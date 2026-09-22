@@ -2,6 +2,9 @@ name: Publish world news to Telegram
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - publish_world_news
   push:
     branches:
       - main
