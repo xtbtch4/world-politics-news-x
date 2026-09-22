@@ -23,8 +23,8 @@ jobs:
     timeout-minutes: 10
     env:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      OPENAI_MODEL: "gpt-5.4-mini"
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: "gemini-3.5-flash"
       TELEGRAM_CHAT_ID: "@xtbtch"
       MAX_AGE_DAYS: "7"
       MAX_POSTS_PER_RUN: "2"
