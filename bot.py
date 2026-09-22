@@ -76,7 +76,9 @@ class Story:
 @dataclass(frozen=True)
 class RenderedPost:
     title: str
-    details: str
+    summary: str
+    quote_line: str
+    source_line: str
     image_url: str = ""
     video_url: str = ""
 
@@ -517,19 +519,67 @@ def make_post(story: Story) -> RenderedPost | None:
         return None
     title, summary, quote, speaker, image_url, video_url = edited
     summary = remove_repeated_lead(title, summary)
-    details = summary
-    if quote and speaker:
-        details += f"\n\n«{quote}» — {speaker}"
-    suffix = f"\n\nИсточник: {story.source}\n{story.url}"
-    limit = 4096 - len(suffix)
-    if len(details) > limit:
-        details = details[: max(1, limit - 1)].rstrip() + "…"
+    quote_line = f"«{quote}» — {speaker}" if quote and speaker else ""
     return RenderedPost(
         title=title,
-        details=details + suffix,
+        summary=summary,
+        quote_line=quote_line,
+        source_line=f"Источник: {story.source}\n{story.url}",
         image_url=image_url,
         video_url=video_url,
     )
+
+
+def full_post_text(post: RenderedPost) -> str:
+    parts = [post.title, post.summary]
+    if post.quote_line:
+        parts.append(post.quote_line)
+    parts.append(post.source_line)
+    text = "\n\n".join(parts)
+    return text[:4096].rstrip()
+
+
+def shorten_at_sentence(text: str, limit: int) -> str:
+    if len(text) <= limit:
+        return text
+    shortened = text[: max(1, limit - 1)].rstrip()
+    sentence_end = max(
+        shortened.rfind(". "),
+        shortened.rfind("! "),
+        shortened.rfind("? "),
+    )
+    if sentence_end >= max(80, limit // 2):
+        shortened = shortened[: sentence_end + 1]
+    elif " " in shortened:
+        shortened = shortened.rsplit(" ", 1)[0]
+    return shortened.rstrip(" ,;:-") + "…"
+
+
+def media_caption(post: RenderedPost, limit: int = 1000) -> str:
+    quote_line = post.quote_line
+    fixed_parts = [post.title]
+    if quote_line:
+        fixed_parts.append(quote_line)
+    fixed_parts.append(post.source_line)
+    fixed_length = len("\n\n".join(fixed_parts)) + 2
+    if quote_line and limit - fixed_length < 220:
+        quote_line = ""
+        fixed_parts = [post.title, post.source_line]
+        fixed_length = len("\n\n".join(fixed_parts)) + 2
+
+    summary_budget = max(80, limit - fixed_length)
+    summary = shorten_at_sentence(post.summary, summary_budget)
+    parts = [post.title, summary]
+    if quote_line:
+        parts.append(quote_line)
+    parts.append(post.source_line)
+    caption = "\n\n".join(parts)
+    if len(caption) > limit:
+        overflow = len(caption) - limit
+        summary = shorten_at_sentence(summary, max(80, len(summary) - overflow - 1))
+        parts[1] = summary
+        caption = "\n\n".join(parts)
+    return caption[:limit].rstrip()
 
 
 def telegram_config() -> tuple[str, str]:
@@ -562,18 +612,18 @@ def telegram_call(token: str, method: str, payload: dict) -> dict:
 
 
 def publish(post: RenderedPost) -> str:
+    caption = media_caption(post)
+    full_text = full_post_text(post)
     if DRY_RUN:
         media = post.video_url or post.image_url or "none"
         LOG.info(
-            "DRY RUN media: %s\nDRY RUN title: %s\nDRY RUN details:\n%s",
+            "DRY RUN media: %s\nDRY RUN single caption:\n%s",
             media,
-            post.title,
-            post.details,
+            caption if media != "none" else full_text,
         )
         return "dry-run"
 
     token, chat_id = telegram_config()
-    media_message_id = None
     media_attempts = []
     if post.video_url:
         media_attempts.append(("sendVideo", "video", post.video_url))
@@ -585,25 +635,24 @@ def publish(post: RenderedPost) -> str:
             media_payload = {
                 "chat_id": chat_id,
                 field: media_url,
-                "caption": post.title[:1024],
+                "caption": caption,
             }
             if method == "sendVideo":
                 media_payload["supports_streaming"] = True
             result = telegram_call(token, method, media_payload)
-            media_message_id = result.get("result", {}).get("message_id")
-            break
+            return str(result.get("result", {}).get("message_id", "unknown"))
         except RuntimeError as exc:
             LOG.warning("Could not send article media via %s: %s", method, exc)
 
-    text = post.details if media_message_id else f"{post.title}\n\n{post.details}"
-    message_payload = {
-        "chat_id": chat_id,
-        "text": text,
-        "disable_web_page_preview": bool(media_message_id),
-    }
-    if media_message_id:
-        message_payload["reply_parameters"] = {"message_id": media_message_id}
-    result = telegram_call(token, "sendMessage", message_payload)
+    result = telegram_call(
+        token,
+        "sendMessage",
+        {
+            "chat_id": chat_id,
+            "text": full_text,
+            "disable_web_page_preview": False,
+        },
+    )
     return str(result.get("result", {}).get("message_id", "unknown"))
 
 
