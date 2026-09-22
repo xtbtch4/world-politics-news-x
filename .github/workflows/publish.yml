@@ -25,6 +25,7 @@ jobs:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       GEMINI_MODEL: "gemini-3.5-flash"
+      GEMINI_FALLBACK_MODEL: "gemini-3.1-flash-lite"
       TELEGRAM_CHAT_ID: "@xtbtch"
       MAX_AGE_DAYS: "7"
       MAX_POSTS_PER_RUN: "2"
