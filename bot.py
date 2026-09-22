@@ -38,8 +38,6 @@ FEEDS = [
     ("NPR World", "https://feeds.npr.org/1004/rss.xml", 2),
     ("UN News", "https://news.un.org/feed/subscribe/en/news/all/rss.xml", 2),
     ("POLITICO Europe", "https://www.politico.eu/feed/", 2),
-    ("CNN World", "https://rss.cnn.com/rss/edition_world.rss", 2),
-    ("CNN Politics", "https://rss.cnn.com/rss/cnn_allpolitics.rss", 2),
     ("The New York Times World", "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", 3),
     ("The New York Times Politics", "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml", 3),
     ("Euronews", "https://www.euronews.com/rss?level=theme&name=news", 2),
@@ -129,7 +127,7 @@ def fetch_stories() -> list[Story]:
     for source, feed_url, source_weight in FEEDS:
         before_count = len(stories)
         try:
-            response = requests.get(feed_url, headers=headers, timeout=25)
+            response = requests.get(feed_url, headers=headers, timeout=15)
             response.raise_for_status()
             feed = feedparser.parse(response.content)
             for entry in feed.entries[:40]:
