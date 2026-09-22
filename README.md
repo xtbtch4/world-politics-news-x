@@ -12,7 +12,7 @@
 - добавляет источник и прямую ссылку;
 - сохраняет историю ссылок и заголовков, чтобы не создавать повторы.
 
-Источники: BBC World, BBC Europe, The Guardian World, The Guardian Politics, Al Jazeera, DW, France 24, NPR World, UN News и POLITICO Europe.
+Источники: BBC World, BBC Europe, The Guardian World, The Guardian Politics, Al Jazeera, DW, France 24, NPR World, UN News, POLITICO Europe, The New York Times World, The New York Times Politics, Euronews, The Economist и Foreign Affairs.
 
 ## Подключение Telegram
 
