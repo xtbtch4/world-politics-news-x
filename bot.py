@@ -38,6 +38,13 @@ FEEDS = [
     ("NPR World", "https://feeds.npr.org/1004/rss.xml", 2),
     ("UN News", "https://news.un.org/feed/subscribe/en/news/all/rss.xml", 2),
     ("POLITICO Europe", "https://www.politico.eu/feed/", 2),
+    ("CNN World", "https://rss.cnn.com/rss/edition_world.rss", 2),
+    ("CNN Politics", "https://rss.cnn.com/rss/cnn_allpolitics.rss", 2),
+    ("The New York Times World", "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", 3),
+    ("The New York Times Politics", "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml", 3),
+    ("Euronews", "https://www.euronews.com/rss?level=theme&name=news", 2),
+    ("The Economist", "https://www.economist.com/international/rss.xml", 2),
+    ("Foreign Affairs", "https://www.foreignaffairs.com/rss.xml", 2),
 ]
 
 HIGH_IMPACT = {
@@ -120,6 +127,7 @@ def fetch_stories() -> list[Story]:
     stories: list[Story] = []
     headers = {"User-Agent": "WorldPoliticsNewsBot/1.0 (+https://github.com/xtbtch4/world-politics-news-x)"}
     for source, feed_url, source_weight in FEEDS:
+        before_count = len(stories)
         try:
             response = requests.get(feed_url, headers=headers, timeout=25)
             response.raise_for_status()
@@ -142,6 +150,7 @@ def fetch_stories() -> list[Story]:
                     score=importance(title, summary, source_weight, published),
                     fingerprint=fingerprint(title),
                 ))
+            LOG.info("Feed %s: %d fresh stories", source, len(stories) - before_count)
         except Exception as exc:
             LOG.warning("Feed failed: %s (%s)", source, exc)
     return stories
