@@ -165,14 +165,14 @@ def fetch_article_context(story: Story) -> str:
             return evidence[:6500]
         page = response.text[:1_500_000]
         page = re.sub(
-            r"<(script|style|noscript|svg|form|nav)\\b[^>]*>.*?</\\1>",
+            r"<(script|style|noscript|svg|form|nav)\b[^>]*>.*?</\1>",
             " ",
             page,
             flags=re.IGNORECASE | re.DOTALL,
         )
         paragraphs = [
             clean_text(value)
-            for value in re.findall(r"<p\\b[^>]*>(.*?)</p>", page, re.IGNORECASE | re.DOTALL)
+            for value in re.findall(r"<p\b[^>]*>(.*?)</p>", page, re.IGNORECASE | re.DOTALL)
         ]
         paragraphs = [value for value in paragraphs if len(value) >= 40]
         if paragraphs:
@@ -184,7 +184,7 @@ def fetch_article_context(story: Story) -> str:
 
 def tagged_value(text: str, tag: str) -> str:
     match = re.search(
-        rf"<{tag}>\\s*(.*?)\\s*</{tag}>",
+        rf"<{tag}>\s*(.*?)\s*</{tag}>",
         text,
         flags=re.IGNORECASE | re.DOTALL,
     )
@@ -192,7 +192,7 @@ def tagged_value(text: str, tag: str) -> str:
 
 
 def normalized_words(value: str) -> str:
-    return re.sub(r"[^\\w]+", " ", value.casefold(), flags=re.UNICODE).strip()
+    return re.sub(r"[^\w]+", " ", value.casefold(), flags=re.UNICODE).strip()
 
 
 def load_state() -> dict:
@@ -268,8 +268,8 @@ def rewrite_story_in_russian(story: Story) -> tuple[str, str, str | None, str | 
     api_key, model, fallback_model = gemini_config()
     evidence = fetch_article_context(story)
     source_text = (
-        f"Источник: {story.source}\\n"
-        f"Оригинальный заголовок: {story.title}\\n"
+        f"Источник: {story.source}\n"
+        f"Оригинальный заголовок: {story.title}\n"
         f"Материал: {evidence}"
     )
     request_body = {
@@ -394,10 +394,10 @@ def make_post(story: Story) -> str | None:
     if not edited:
         return None
     title, summary, quote, speaker = edited
-    body = f"{title}\\n\\n{summary}"
+    body = f"{title}\n\n{summary}"
     if quote and speaker:
-        body += f"\\n\\n«{quote}» — {speaker}"
-    suffix = f"\\n\\nИсточник: {story.source}\\n{story.url}"
+        body += f"\n\n«{quote}» — {speaker}"
+    suffix = f"\n\nИсточник: {story.source}\n{story.url}"
     limit = 4096 - len(suffix)
     if len(body) > limit:
         body = body[: max(1, limit - 1)].rstrip() + "…"
