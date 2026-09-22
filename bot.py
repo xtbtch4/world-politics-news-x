@@ -170,8 +170,8 @@ def entry_media(entry: dict) -> tuple[str, str]:
 def meta_content(page: str, key: str) -> str:
     escaped = re.escape(key)
     patterns = (
-        rf'<meta\\b[^>]*(?:property|name)=[\"\\\']{escaped}[\"\\\'][^>]*content=[\"\\\']([^\"\\\']+)',
-        rf'<meta\\b[^>]*content=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*(?:property|name)=[\"\\\']{escaped}[\"\\\']',
+        rf'<meta\b[^>]*(?:property|name)=[\"\\']{escaped}[\"\\'][^>]*content=[\"\\']([^\"\\']+)',
+        rf'<meta\b[^>]*content=[\"\\']([^\"\\']+)[\"\\'][^>]*(?:property|name)=[\"\\']{escaped}[\"\\']',
     )
     for pattern in patterns:
         match = re.search(pattern, page, flags=re.IGNORECASE)
@@ -245,14 +245,14 @@ def fetch_article_context(story: Story) -> tuple[str, str, str]:
                 video_url = urljoin(story.url, candidate_video)
 
         page = re.sub(
-            r"<(script|style|noscript|svg|form|nav)\\b[^>]*>.*?</\\1>",
+            r"<(script|style|noscript|svg|form|nav)\b[^>]*>.*?</\1>",
             " ",
             page,
             flags=re.IGNORECASE | re.DOTALL,
         )
         paragraphs = [
             clean_text(value)
-            for value in re.findall(r"<p\\b[^>]*>(.*?)</p>", page, re.IGNORECASE | re.DOTALL)
+            for value in re.findall(r"<p\b[^>]*>(.*?)</p>", page, re.IGNORECASE | re.DOTALL)
         ]
         paragraphs = [value for value in paragraphs if len(value) >= 40]
         if paragraphs:
@@ -497,7 +497,7 @@ def compact_tokens(value: str) -> set[str]:
 
 
 def remove_repeated_lead(title: str, summary: str) -> str:
-    sentences = re.split(r"(?<=[.!?])\\s+", summary, maxsplit=1)
+    sentences = re.split(r"(?<=[.!?])\s+", summary, maxsplit=1)
     if len(sentences) < 2:
         return summary
     title_tokens = compact_tokens(title)
@@ -519,8 +519,8 @@ def make_post(story: Story) -> RenderedPost | None:
     summary = remove_repeated_lead(title, summary)
     details = summary
     if quote and speaker:
-        details += f"\\n\\n«{quote}» — {speaker}"
-    suffix = f"\\n\\nИсточник: {story.source}\\n{story.url}"
+        details += f"\n\n«{quote}» — {speaker}"
+    suffix = f"\n\nИсточник: {story.source}\n{story.url}"
     limit = 4096 - len(suffix)
     if len(details) > limit:
         details = details[: max(1, limit - 1)].rstrip() + "…"
@@ -565,7 +565,7 @@ def publish(post: RenderedPost) -> str:
     if DRY_RUN:
         media = post.video_url or post.image_url or "none"
         LOG.info(
-            "DRY RUN media: %s\\nDRY RUN title: %s\\nDRY RUN details:\\n%s",
+            "DRY RUN media: %s\nDRY RUN title: %s\nDRY RUN details:\n%s",
             media,
             post.title,
             post.details,
@@ -597,7 +597,7 @@ def publish(post: RenderedPost) -> str:
         except RuntimeError as exc:
             LOG.warning("Could not send article media via %s: %s", method, exc)
 
-    text = post.details if media_message_id else f"{post.title}\\n\\n{post.details}"
+    text = post.details if media_message_id else f"{post.title}\n\n{post.details}"
     message_payload = {
         "chat_id": chat_id,
         "text": text,
