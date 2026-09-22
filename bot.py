@@ -18,7 +18,6 @@ import feedparser
 import requests
 from dateutil import parser as date_parser
 from deep_translator import GoogleTranslator, MyMemoryTranslator
-from requests_oauthlib import OAuth1
 
 
 LOG = logging.getLogger("world-news-bot")
@@ -206,28 +205,46 @@ def translate_title(title: str) -> str:
 def make_post(story: Story) -> str:
     title = translate_title(story.title)
     suffix = f"\n\nИсточник: {story.source}\n{story.url}"
-    limit = 280 - len(suffix)
+    limit = 4096 - len(suffix)
     if len(title) > limit:
         title = title[: max(1, limit - 1)].rstrip() + "…"
     return title + suffix
 
 
-def x_auth() -> OAuth1:
-    names = ["X_CONSUMER_KEY", "X_CONSUMER_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_TOKEN_SECRET"]
-    missing = [name for name in names if not os.getenv(name)]
+def telegram_config() -> tuple[str, str]:
+    token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
+    chat_id = os.getenv("TELEGRAM_CHAT_ID", "@xtbtch").strip()
+    missing = []
+    if not token:
+        missing.append("TELEGRAM_BOT_TOKEN")
+    if not chat_id:
+        missing.append("TELEGRAM_CHAT_ID")
     if missing:
-        raise RuntimeError("Missing GitHub Secrets: " + ", ".join(missing))
-    return OAuth1(*(os.environ[name] for name in names))
+        raise RuntimeError("Missing GitHub Secrets or variables: " + ", ".join(missing))
+    return token, chat_id
 
 
 def publish(text: str) -> str:
     if DRY_RUN:
         LOG.info("DRY RUN post:\n%s", text)
         return "dry-run"
-    response = requests.post("https://api.x.com/2/tweets", auth=x_auth(), json={"text": text}, timeout=30)
-    if response.status_code not in {200, 201}:
-        raise RuntimeError(f"X API error {response.status_code}: {response.text[:500]}")
-    return response.json().get("data", {}).get("id", "unknown")
+
+    token, chat_id = telegram_config()
+    response = requests.post(
+        f"https://api.telegram.org/bot{token}/sendMessage",
+        json={
+            "chat_id": chat_id,
+            "text": text,
+            "disable_web_page_preview": False,
+        },
+        timeout=30,
+    )
+    if response.status_code != 200:
+        raise RuntimeError(f"Telegram API error {response.status_code}: {response.text[:500]}")
+    payload = response.json()
+    if not payload.get("ok"):
+        raise RuntimeError(f"Telegram API error: {response.text[:500]}")
+    return str(payload.get("result", {}).get("message_id", "unknown"))
 
 
 def main() -> int:
