@@ -2,6 +2,11 @@ name: Publish world news to Telegram
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "data/run-now.txt"
   schedule:
     - cron: "17 * * * *"
 
