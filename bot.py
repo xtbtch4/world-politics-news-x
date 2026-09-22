@@ -264,7 +264,7 @@ def extract_response_text(payload: dict) -> str:
     return clean_text(" ".join(parts))
 
 
-def rewrite_story_in_russian(story: Story) -> tuple[str, str | None, str | None] | None:
+def rewrite_story_in_russian(story: Story) -> tuple[str, str, str | None, str | None] | None:
     api_key, model, fallback_model = gemini_config()
     evidence = fetch_article_context(story)
     source_text = (
@@ -276,10 +276,15 @@ def rewrite_story_in_russian(story: Story) -> tuple[str, str | None, str | None]
         "model": model,
         "system_instruction": (
             "Ты опытный редактор русскоязычной международной новостной ленты. "
-            "Создай естественный, ясный и нейтральный заголовок на русском языке. "
-            "Передавай смысл, а не буквальную конструкцию английского оригинала. "
-            "Устраняй кальки вроде «торгуют ударами». "
-            "Не добавляй фактов, оценок, эмоций и кликбейта. "
+            "Создай естественный, ясный и нейтральный заголовок, затем самодостаточное изложение "
+            "новости на русском языке объёмом примерно 70–130 слов. "
+            "Раскрой главное событие, участников, место и время, а также подтверждённый контекст "
+            "и возможные последствия, но только если они прямо указаны в материале. "
+            "Читатель должен понять суть новости, не переходя по ссылке. "
+            "Передавай смысл естественно, без буквальных калек вроде «торгуют ударами». "
+            "Не добавляй фактов, оценок, эмоций, домыслов и кликбейта. "
+            "Не повторяй заголовок в изложении и не упоминай, что текст является пересказом. "
+            "Если данных мало, напиши более короткое изложение, не заполняя пробелы догадками. "
             "Если в материале есть содержательная прямая цитата с однозначно указанным автором, "
             "выбери одну цитату длиной не более 25 слов, переведи её естественно на русский "
             "и укажи автора. QUOTE_ORIGINAL должна дословно присутствовать в материале. "
@@ -287,6 +292,7 @@ def rewrite_story_in_russian(story: Story) -> tuple[str, str | None, str | None]
             "Если надёжной цитаты нет, во всех трёх полях цитаты напиши НЕТ. "
             "Верни ответ строго в формате: "
             "<TITLE>заголовок</TITLE>"
+            "<SUMMARY>содержательное изложение новости</SUMMARY>"
             "<QUOTE_ORIGINAL>точная английская цитата или НЕТ</QUOTE_ORIGINAL>"
             "<QUOTE_RU>перевод цитаты или НЕТ</QUOTE_RU>"
             "<SPEAKER>автор цитаты по-русски или НЕТ</SPEAKER>. "
@@ -295,7 +301,7 @@ def rewrite_story_in_russian(story: Story) -> tuple[str, str | None, str | None]
         "input": source_text,
         "store": False,
         "generation_config": {
-            "max_output_tokens": 768,
+            "max_output_tokens": 1200,
             "thinking_level": "low",
         },
     }
@@ -355,8 +361,12 @@ def rewrite_story_in_russian(story: Story) -> tuple[str, str | None, str | None]
 
     editor_text = extract_response_text(payload)
     title = tagged_value(editor_text, "TITLE").strip(" \"'«»")
+    summary = tagged_value(editor_text, "SUMMARY")
     if not title or not has_cyrillic(title) or len(title.split()) < 5:
         LOG.warning("AI editor returned no valid Russian headline: %s", story.title)
+        return None
+    if not summary or not has_cyrillic(summary) or len(summary.split()) < 25:
+        LOG.warning("AI editor returned no sufficiently detailed summary: %s", story.title)
         return None
 
     original_quote = tagged_value(editor_text, "QUOTE_ORIGINAL")
@@ -376,15 +386,15 @@ def rewrite_story_in_russian(story: Story) -> tuple[str, str | None, str | None]
     if not quote_is_verified:
         original_quote = russian_quote = speaker = None
 
-    return title[:500].rstrip(), russian_quote, speaker
+    return title[:500].rstrip(), summary[:2200].rstrip(), russian_quote, speaker
 
 
 def make_post(story: Story) -> str | None:
     edited = rewrite_story_in_russian(story)
     if not edited:
         return None
-    title, quote, speaker = edited
-    body = title
+    title, summary, quote, speaker = edited
+    body = f"{title}\\n\\n{summary}"
     if quote and speaker:
         body += f"\\n\\n«{quote}» — {speaker}"
     suffix = f"\\n\\nИсточник: {story.source}\\n{story.url}"
