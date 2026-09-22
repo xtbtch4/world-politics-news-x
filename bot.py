@@ -183,27 +183,44 @@ def select_stories(stories: Iterable[Story], state: dict) -> list[Story]:
         if any(similar_tokens(story.title, kept.title) >= 0.55 for kept in unique):
             continue
         unique.append(story)
-        if len(unique) >= MAX_POSTS:
+        if len(unique) >= max(MAX_POSTS * 5, MAX_POSTS):
             break
     return unique
 
 
-def translate_title(title: str) -> str:
-    try:
-        translated = GoogleTranslator(source="auto", target="ru").translate(title)
-        return clean_text(translated) or title
-    except Exception as exc:
-        LOG.warning("Google translation failed: %s", exc)
-    try:
-        translated = MyMemoryTranslator(source="en", target="ru").translate(title)
-        return clean_text(translated) or title
-    except Exception as exc:
-        LOG.warning("Fallback translation failed: %s", exc)
+def has_cyrillic(value: str) -> bool:
+    return bool(re.search(r"[А-Яа-яЁё]", value))
+
+
+def translate_title(title: str) -> str | None:
+    if has_cyrillic(title):
         return title
 
+    try:
+        translated = clean_text(GoogleTranslator(source="auto", target="ru").translate(title))
+        if translated and has_cyrillic(translated):
+            return translated
+        LOG.warning("Google returned text without Russian translation")
+    except Exception as exc:
+        LOG.warning("Google translation failed: %s", str(exc).splitlines()[0])
 
-def make_post(story: Story) -> str:
+    try:
+        translated = clean_text(
+            MyMemoryTranslator(source="en-GB", target="ru-RU").translate(title)
+        )
+        if translated and has_cyrillic(translated):
+            return translated
+        LOG.warning("Fallback returned text without Russian translation")
+    except Exception as exc:
+        LOG.warning("Fallback translation failed: %s", str(exc).splitlines()[0])
+
+    return None
+
+
+def make_post(story: Story) -> str | None:
     title = translate_title(story.title)
+    if not title:
+        return None
     suffix = f"\n\nИсточник: {story.source}\n{story.url}"
     limit = 4096 - len(suffix)
     if len(title) > limit:
@@ -257,9 +274,16 @@ def main() -> int:
         LOG.info("No new sufficiently important stories")
         save_state(state)
         return 0
+    published_count = 0
     for story in selected:
+        if published_count >= MAX_POSTS:
+            break
         text = make_post(story)
+        if not text:
+            LOG.warning("Skipped because Russian translation is unavailable: %s", story.title)
+            continue
         post_id = publish(text)
+        published_count += 1
         LOG.info("Published %s from %s: %s", post_id, story.source, story.title)
         if not DRY_RUN:
             state.setdefault("posted_urls", []).append(story.url)
