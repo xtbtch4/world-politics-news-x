@@ -242,7 +242,7 @@ def rewrite_story_in_russian(story: Story) -> str | None:
             "input": source_text,
             "store": False,
             "generation_config": {
-                "max_output_tokens": 160,
+                "max_output_tokens": 512,
                 "thinking_level": "low",
             },
         },
@@ -252,8 +252,16 @@ def rewrite_story_in_russian(story: Story) -> str | None:
         raise RuntimeError(
             f"Gemini API error {response.status_code}: {response.text[:500]}"
         )
-    title = extract_response_text(response.json()).strip(" \"'«»")
-    if not title or not has_cyrillic(title):
+    payload = response.json()
+    if payload.get("status") != "completed":
+        LOG.warning(
+            "Gemini returned incomplete response (%s): %s",
+            payload.get("status"),
+            story.title,
+        )
+        return None
+    title = extract_response_text(payload).strip(" \"'«»")
+    if not title or not has_cyrillic(title) or len(title.split()) < 5:
         LOG.warning("AI editor returned no valid Russian headline: %s", story.title)
         return None
     return title[:500].rstrip()
