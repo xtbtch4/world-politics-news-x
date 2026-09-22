@@ -79,6 +79,7 @@ jobs:
           merged = {
               "posted_urls": merged_values("posted_urls"),
               "posted_fingerprints": merged_values("posted_fingerprints"),
+              "posted_event_keys": merged_values("posted_event_keys"),
               "updated_at": datetime.now(timezone.utc).isoformat(),
           }
           remote_path.write_text(
