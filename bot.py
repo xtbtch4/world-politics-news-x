@@ -168,15 +168,17 @@ def entry_media(entry: dict) -> tuple[str, str]:
 
 
 def meta_content(page: str, key: str) -> str:
-    escaped = re.escape(key)
-    patterns = (
-        rf'<meta\b[^>]*(?:property|name)=[\"\\']{escaped}[\"\\'][^>]*content=[\"\\']([^\"\\']+)',
-        rf'<meta\b[^>]*content=[\"\\']([^\"\\']+)[\"\\'][^>]*(?:property|name)=[\"\\']{escaped}[\"\\']',
-    )
-    for pattern in patterns:
-        match = re.search(pattern, page, flags=re.IGNORECASE)
-        if match:
-            return html.unescape(match.group(1)).strip()
+    for tag in re.findall(r"<meta\\b[^>]*>", page, flags=re.IGNORECASE):
+        attributes = {
+            name.casefold(): html.unescape(value).strip()
+            for name, value in re.findall(
+                r"([a-zA-Z_:.-]+)\\s*=\\s*['\\\"]([^'\\\"]*)['\\\"]",
+                tag,
+            )
+        }
+        marker = attributes.get("property") or attributes.get("name") or ""
+        if marker.casefold() == key.casefold():
+            return attributes.get("content", "")
     return ""
 
 
@@ -506,7 +508,7 @@ def remove_repeated_lead(title: str, summary: str) -> str:
         return summary
     overlap = len(title_tokens & lead_tokens) / len(title_tokens)
     remainder = sentences[1].strip()
-    if overlap >= 0.35 and len(remainder.split()) >= 20:
+    if overlap >= 0.35 and len(remainder.split()) >= 12:
         return remainder
     return summary
 
@@ -582,16 +584,14 @@ def publish(post: RenderedPost) -> str:
 
     for method, field, media_url in media_attempts:
         try:
-            result = telegram_call(
-                token,
-                method,
-                {
-                    "chat_id": chat_id,
-                    field: media_url,
-                    "caption": post.title[:1024],
-                    "supports_streaming": True if method == "sendVideo" else None,
-                },
-            )
+            media_payload = {
+                "chat_id": chat_id,
+                field: media_url,
+                "caption": post.title[:1024],
+            }
+            if method == "sendVideo":
+                media_payload["supports_streaming"] = True
+            result = telegram_call(token, method, media_payload)
             media_message_id = result.get("result", {}).get("message_id")
             break
         except RuntimeError as exc:
