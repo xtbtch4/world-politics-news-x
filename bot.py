@@ -211,7 +211,10 @@ def best_image_variant(page: str, image_url: str) -> str:
     candidates = [image_url]
     for value in re.findall(r"""https?://[^"'<>\s]+""", page):
         candidate = html.unescape(value).strip()
-        parts = urlsplit(candidate)
+        try:
+            parts = urlsplit(candidate)
+        except ValueError:
+            continue
         if parts.netloc == base.netloc and parts.path == base.path:
             candidates.append(candidate)
     return max(candidates, key=image_width_hint)
