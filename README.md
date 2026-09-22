@@ -46,3 +46,14 @@
 - `MIN_IMPORTANCE_SCORE` — порог важности.
 
 История публикаций хранится в `data/posted.json` и автоматически обновляется только после успешной публикации.
+
+## Внешний планировщик
+
+Для резервного запуска через cron-job.org используется:
+
+- метод: `POST`;
+- URL: `https://api.github.com/repos/xtbtch4/world-politics-news-x/dispatches`;
+- тело: `{"event_type":"publish_world_news"}`;
+- интервал: каждые 10 минут.
+
+Токен GitHub хранится только в заголовке `Authorization: Bearer …` внешнего планировщика и не добавляется в репозиторий.
