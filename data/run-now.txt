@@ -1,1 +1,1 @@
-Validate expanded JSON news format 2026-09-22.
+Validate media-first Telegram news format 2026-09-22.
