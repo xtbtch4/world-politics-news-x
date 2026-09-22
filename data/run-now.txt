@@ -1,1 +1,1 @@
-Validate verified quote formatting 2026-09-22.
+Validate full self-contained news format 2026-09-22.
