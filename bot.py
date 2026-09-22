@@ -370,6 +370,14 @@ def similar_tokens(a: str, b: str) -> float:
     return len(ta & tb) / len(ta | tb)
 
 
+def event_similarity(a: str, b: str) -> float:
+    tokens_a = set(re.findall(r"[a-z0-9]{4,}", a.casefold()))
+    tokens_b = set(re.findall(r"[a-z0-9]{4,}", b.casefold()))
+    if not tokens_a or not tokens_b:
+        return 0
+    return len(tokens_a & tokens_b) / min(len(tokens_a), len(tokens_b))
+
+
 def select_stories(stories: Iterable[Story], state: dict) -> list[Story]:
     used_urls = {canonical_url(url) for url in state.get("posted_urls", [])}
     used_fingerprints = set(state.get("posted_fingerprints", []))
@@ -761,7 +769,7 @@ def main() -> int:
         if not post:
             LOG.warning("Skipped because Russian translation is unavailable: %s", story.title)
             continue
-        if any(similar_tokens(post.event_key, key) >= 0.50 for key in seen_event_keys):
+        if any(event_similarity(post.event_key, key) >= 0.60 for key in seen_event_keys):
             LOG.info("Skipped duplicate event: %s (%s)", story.title, post.event_key)
             continue
         post_id = publish(post)
