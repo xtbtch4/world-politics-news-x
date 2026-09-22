@@ -1,4 +1,4 @@
-name: Publish world news to X
+name: Publish world news to Telegram
 
 on:
   workflow_dispatch:
@@ -17,10 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      X_CONSUMER_KEY: ${{ secrets.X_CONSUMER_KEY }}
-      X_CONSUMER_SECRET: ${{ secrets.X_CONSUMER_SECRET }}
-      X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
-      X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: "@xtbtch"
       MAX_AGE_DAYS: "7"
       MAX_POSTS_PER_RUN: "2"
       MIN_IMPORTANCE_SCORE: "5"
