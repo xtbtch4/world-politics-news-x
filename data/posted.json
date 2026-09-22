@@ -47,7 +47,9 @@
     "https://nytimes.com/2026/09/22/world/europe/us-greenland-deal-denmark-trump.html",
     "https://nytimes.com/live/2026/09/22/world/un-general-assembly-trump-speech-news",
     "https://nytimes.com/2026/09/22/climate/antonio-guterres-climate-change.html",
-    "https://nytimes.com/2026/09/22/us/politics/fact-check-trump-united-nations.html"
+    "https://nytimes.com/2026/09/22/us/politics/fact-check-trump-united-nations.html",
+    "https://france24.com/en/tv-shows/the-debate/20260922-trump-s-world-leaders-navigate-consequences-of-us-policy",
+    "https://aljazeera.com/video/newsfeed/2026/9/22/trump-my-honour-to-settle-eight-wars-including-war-in-gaza"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -99,14 +101,18 @@
     "4c34635f4f41d06dd7d399ef",
     "c10fc046fd2cbc7b43a01ba0",
     "98d667bfe6baec8979baf3a5",
-    "19e36cb2ebb306d3b09a0bd1"
+    "19e36cb2ebb306d3b09a0bd1",
+    "58bec5167b51c84f7d17e7ca",
+    "668fa71971d6f44f75c613fc"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
     "trump greenland presence agreement",
     "trump iran deal annihilation threat general assembly",
     "antonio guterres summarizes climate change efforts",
-    "trump speech fact check"
+    "trump speech fact check",
+    "trump general assembly meeting energy crisis 2026",
+    "trump claims settling eight wars general assembly 2024"
   ],
-  "updated_at": "2026-09-22T18:15:55.868916+00:00"
+  "updated_at": "2026-09-22T18:21:22.583075+00:00"
 }
