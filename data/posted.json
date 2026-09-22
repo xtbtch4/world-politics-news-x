@@ -43,7 +43,9 @@
     "https://www.aljazeera.com/features/2026/9/22/fifteen-guilty-in-2019-sri-lanka-easter-bombings-what-the-verdict-says?traffic_source=rss",
     "https://www.theguardian.com/us-news/2026/sep/20/andy-burnham-faces-a-weakened-trump-but-the-president-remains-unpredictable",
     "https://www.theguardian.com/politics/2026/sep/22/donald-trump-praises-natual-businessman-andy-burnham-after-first-meeting",
-    "https://www.theguardian.com/politics/live/2026/sep/22/andy-burnham-donald-trump-un-general-assembly-uk-politics-latest-news"
+    "https://www.theguardian.com/politics/live/2026/sep/22/andy-burnham-donald-trump-un-general-assembly-uk-politics-latest-news",
+    "https://nytimes.com/2026/09/22/world/europe/us-greenland-deal-denmark-trump.html",
+    "https://nytimes.com/live/2026/09/22/world/un-general-assembly-trump-speech-news"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -91,10 +93,14 @@
     "d825b974e6b20a5b62ba6803",
     "7e35f9ea11f59bc777824e39",
     "82cae12aaa622861e69f9541",
-    "9732643e6fe9bee4d41eaff7"
+    "9732643e6fe9bee4d41eaff7",
+    "4c34635f4f41d06dd7d399ef",
+    "c10fc046fd2cbc7b43a01ba0"
   ],
   "posted_event_keys": [
-    "donald trump andy burnham first meeting un general assembly new york"
+    "donald trump andy burnham first meeting un general assembly new york",
+    "trump greenland presence agreement",
+    "trump iran deal annihilation threat general assembly"
   ],
-  "updated_at": "2026-09-22T18:02:46.251814+00:00"
+  "updated_at": "2026-09-22T18:07:06.857915+00:00"
 }
