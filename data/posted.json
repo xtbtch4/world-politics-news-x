@@ -45,7 +45,9 @@
     "https://www.theguardian.com/politics/2026/sep/22/donald-trump-praises-natual-businessman-andy-burnham-after-first-meeting",
     "https://www.theguardian.com/politics/live/2026/sep/22/andy-burnham-donald-trump-un-general-assembly-uk-politics-latest-news",
     "https://nytimes.com/2026/09/22/world/europe/us-greenland-deal-denmark-trump.html",
-    "https://nytimes.com/live/2026/09/22/world/un-general-assembly-trump-speech-news"
+    "https://nytimes.com/live/2026/09/22/world/un-general-assembly-trump-speech-news",
+    "https://nytimes.com/2026/09/22/climate/antonio-guterres-climate-change.html",
+    "https://nytimes.com/2026/09/22/us/politics/fact-check-trump-united-nations.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -95,12 +97,16 @@
     "82cae12aaa622861e69f9541",
     "9732643e6fe9bee4d41eaff7",
     "4c34635f4f41d06dd7d399ef",
-    "c10fc046fd2cbc7b43a01ba0"
+    "c10fc046fd2cbc7b43a01ba0",
+    "98d667bfe6baec8979baf3a5",
+    "19e36cb2ebb306d3b09a0bd1"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
     "trump greenland presence agreement",
-    "trump iran deal annihilation threat general assembly"
+    "trump iran deal annihilation threat general assembly",
+    "antonio guterres summarizes climate change efforts",
+    "trump speech fact check"
   ],
-  "updated_at": "2026-09-22T18:07:06.857915+00:00"
+  "updated_at": "2026-09-22T18:15:55.868916+00:00"
 }
