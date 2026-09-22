@@ -255,15 +255,28 @@ def rewrite_story_in_russian(story: Story) -> str | None:
     attempts = [model, model, fallback_model]
     for attempt_number, attempt_model in enumerate(attempts, start=1):
         request_body["model"] = attempt_model
-        response = requests.post(
-            "https://generativelanguage.googleapis.com/v1beta/interactions",
-            headers={
-                "x-goog-api-key": api_key,
-                "Content-Type": "application/json",
-            },
-            json=request_body,
-            timeout=60,
-        )
+        try:
+            response = requests.post(
+                "https://generativelanguage.googleapis.com/v1beta/interactions",
+                headers={
+                    "x-goog-api-key": api_key,
+                    "Content-Type": "application/json",
+                },
+                json=request_body,
+                timeout=35,
+            )
+        except requests.RequestException as exc:
+            LOG.warning(
+                "Gemini network error on attempt %d with %s: %s",
+                attempt_number,
+                attempt_model,
+                str(exc).splitlines()[0],
+            )
+            if attempt_number < len(attempts):
+                time.sleep(3 * attempt_number)
+                continue
+            LOG.error("Gemini is temporarily unreachable; story skipped")
+            return None
         if response.status_code in {200, 201}:
             break
         if response.status_code in {429, 500, 502, 503, 504}:
