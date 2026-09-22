@@ -17,7 +17,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import feedparser
 import requests
 from dateutil import parser as date_parser
-from deep_translator import GoogleTranslator
+from deep_translator import GoogleTranslator, MyMemoryTranslator
 from requests_oauthlib import OAuth1
 
 
@@ -40,7 +40,6 @@ FEEDS = [
     ("NPR World", "https://feeds.npr.org/1004/rss.xml", 2),
     ("UN News", "https://news.un.org/feed/subscribe/en/news/all/rss.xml", 2),
     ("POLITICO Europe", "https://www.politico.eu/feed/", 2),
-    ("The Kyiv Independent", "https://kyivindependent.com/feed/", 3),
 ]
 
 HIGH_IMPACT = {
@@ -195,7 +194,12 @@ def translate_title(title: str) -> str:
         translated = GoogleTranslator(source="auto", target="ru").translate(title)
         return clean_text(translated) or title
     except Exception as exc:
-        LOG.warning("Translation failed: %s", exc)
+        LOG.warning("Google translation failed: %s", exc)
+    try:
+        translated = MyMemoryTranslator(source="en", target="ru").translate(title)
+        return clean_text(translated) or title
+    except Exception as exc:
+        LOG.warning("Fallback translation failed: %s", exc)
         return title
 
 
