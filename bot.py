@@ -182,6 +182,41 @@ def meta_content(page: str, key: str) -> str:
     return ""
 
 
+def image_width_hint(url: str) -> int:
+    if not url:
+        return 0
+    widths: list[int] = []
+    query = dict(parse_qsl(urlsplit(url).query))
+    for key in ("width", "w"):
+        raw = query.get(key, "")
+        match = re.match(r"(\d+)", raw)
+        if match:
+            widths.append(int(match.group(1)))
+    resize = query.get("resize", "")
+    match = re.match(r"(\d+)", resize)
+    if match:
+        widths.append(int(match.group(1)))
+    for pattern in (r"/w:(\d+)", r"/w_(\d+)", r"-(\d{3,4})x\d{3,4}"):
+        match = re.search(pattern, url, flags=re.IGNORECASE)
+        if match:
+            widths.append(int(match.group(1)))
+    return max(widths, default=0)
+
+
+def best_image_variant(page: str, image_url: str) -> str:
+    image_url = html.unescape(image_url).strip()
+    if not image_url:
+        return ""
+    base = urlsplit(image_url)
+    candidates = [image_url]
+    for value in re.findall(r"""https?://[^"'<>\s]+""", page):
+        candidate = html.unescape(value).strip()
+        parts = urlsplit(candidate)
+        if parts.netloc == base.netloc and parts.path == base.path:
+            candidates.append(candidate)
+    return max(candidates, key=image_width_hint)
+
+
 def fetch_stories() -> list[Story]:
     cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     stories: list[Story] = []
@@ -232,10 +267,10 @@ def fetch_article_context(story: Story) -> tuple[str, str, str]:
             return evidence[:6500], image_url, video_url
         page = response.text[:1_500_000]
 
-        if not image_url:
-            image_url = meta_content(page, "og:image") or meta_content(page, "twitter:image")
-            if image_url:
-                image_url = urljoin(story.url, image_url)
+        page_image = meta_content(page, "og:image") or meta_content(page, "twitter:image")
+        if page_image:
+            page_image = urljoin(story.url, page_image)
+            image_url = best_image_variant(page, page_image)
         if not video_url:
             candidate_video = (
                 meta_content(page, "og:video:url")
@@ -261,6 +296,10 @@ def fetch_article_context(story: Story) -> tuple[str, str, str]:
             evidence = clean_text(f"{story.summary} {' '.join(paragraphs[:40])}")
     except requests.RequestException as exc:
         LOG.info("Article text unavailable for %s: %s", story.source, str(exc).splitlines()[0])
+    width_hint = image_width_hint(image_url)
+    if image_url and 0 < width_hint < 640:
+        LOG.info("Skipping low-resolution image (%d px): %s", width_hint, story.source)
+        image_url = ""
     return evidence[:6500], image_url, video_url
 
 
