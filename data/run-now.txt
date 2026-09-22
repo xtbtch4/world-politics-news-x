@@ -1,1 +1,1 @@
-Validate full self-contained news format 2026-09-22.
+Validate expanded JSON news format 2026-09-22.
