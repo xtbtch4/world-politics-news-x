@@ -1,1 +1,1 @@
-External scheduler timeout handling dry-run 2026-09-22.
+Validate conflict-safe history merge 2026-09-22.
