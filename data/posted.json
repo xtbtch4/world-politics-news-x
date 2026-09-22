@@ -65,7 +65,9 @@
     "https://nytimes.com/2026/09/22/world/asia/sri-lanka-convictions-easter-2019-bomb-attacks.html",
     "https://bbc.co.uk/news/articles/c6dj4k98107do",
     "https://aljazeera.com/news/2026/9/22/trump-says-us-officials-met-with-iranian-delegation-for-three-hours-2",
-    "https://theguardian.com/us-news/2026/sep/22/fighter-jet-crashes-germany"
+    "https://theguardian.com/us-news/2026/sep/22/fighter-jet-crashes-germany",
+    "https://nytimes.com/2026/09/22/world/africa/ethiopia-rebel-alliance.html",
+    "https://nytimes.com/2026/09/22/us/politics/veterans-benefits-bill-congress-elections.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -135,7 +137,9 @@
     "8c7582add09408cbac0f5d93",
     "4855c44e2c431b16b48896ac",
     "9105b1c6ed7514d556175571",
-    "79e78c68e6872c69a98c7df9"
+    "79e78c68e6872c69a98c7df9",
+    "8adb07f8d0023d7fbb6a5be6",
+    "22400860ee7c02889939b6c0"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -160,7 +164,9 @@
     "sri lanka court convicts easter bombings 2019",
     "removes usmanov fridman sanctions list",
     "trump witkoff kushner iran officials talks general assembly september",
-    "f16 fighter jet crash spangdahlem germany tuesday"
+    "f16 fighter jet crash spangdahlem germany tuesday",
+    "ethiopian rebel groups form coalition against government",
+    "republicans veterans benefits bill stalling house"
   ],
-  "updated_at": "2026-09-22T19:42:00.215781+00:00"
+  "updated_at": "2026-09-22T19:51:58.159308+00:00"
 }
