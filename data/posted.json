@@ -1,5 +1,11 @@
 {
-  "posted_urls": [],
-  "posted_fingerprints": [],
-  "updated_at": null
+  "posted_urls": [
+    "https://www.bbc.co.uk/news/articles/cqy7z275yx65o?at_medium=RSS&at_campaign=rss",
+    "https://www.theguardian.com/world/live/2026/sep/22/eu-trump-russia-putin-sanctions-ukraine-greenland-denmark-zelenskyy-latest-news-updates"
+  ],
+  "posted_fingerprints": [
+    "bedd9cff5e37f9481be8e694",
+    "26881f21ebbf9d5bbe22a332"
+  ],
+  "updated_at": "2026-09-22T13:06:18.046306+00:00"
 }
