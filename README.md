@@ -1,6 +1,6 @@
-# World Politics News → X
+# World Politics News → Telegram
 
-Автоматический сбор важных политических и мировых новостей с публикацией в X.
+Автоматический сбор важных политических и мировых новостей с публикацией в Telegram-канал [@xtbtch](https://t.me/xtbtch).
 
 ## Как работает
 
@@ -12,28 +12,24 @@
 - добавляет источник и прямую ссылку;
 - сохраняет историю ссылок и заголовков, чтобы не создавать повторы.
 
-Источники: BBC, The Guardian, Al Jazeera, DW, France 24, NPR, UN News, POLITICO Europe и The Kyiv Independent.
+Источники: BBC World, BBC Europe, The Guardian World, The Guardian Politics, Al Jazeera, DW, France 24, NPR World, UN News и POLITICO Europe.
 
-## Обязательные GitHub Secrets
+## Подключение Telegram
 
-Откройте `Settings → Secrets and variables → Actions → New repository secret` и по очереди создайте:
+1. Создайте бота через [@BotFather](https://t.me/BotFather) командой `/newbot`.
+2. Добавьте бота в канал `@xtbtch` как администратора.
+3. Разрешите боту право **Публикация сообщений**.
+4. В репозитории откройте `Settings → Secrets and variables → Actions → New repository secret`.
+5. Создайте секрет `TELEGRAM_BOT_TOKEN` и вставьте токен, полученный от BotFather.
 
-| Название | Значение из X Developer Console |
-|---|---|
-| `X_CONSUMER_KEY` | Consumer Key |
-| `X_CONSUMER_SECRET` | Consumer Key Secret |
-| `X_ACCESS_TOKEN` | Access Token с правами Read and write |
-| `X_ACCESS_TOKEN_SECRET` | Access Token Secret |
-
-Не добавляйте ключи непосредственно в файлы репозитория.
+Токен нельзя добавлять непосредственно в файлы репозитория.
 
 ## Первый запуск
 
-1. Убедитесь, что в X Developer Console подключены API-кредиты для Pay Per Use.
-2. Откройте вкладку `Actions`.
-3. Выберите `Publish world news to X`.
-4. Нажмите `Run workflow`.
-5. Откройте выполненный запуск и проверьте шаг `Collect and publish news`.
+1. Откройте вкладку `Actions`.
+2. Выберите `Publish world news to Telegram`.
+3. Нажмите `Run workflow`.
+4. Откройте выполненный запуск и проверьте шаг `Collect and publish news`.
 
 Автоматическое расписание: каждый час, на 17-й минуте часа. GitHub иногда запускает плановые задания с небольшой задержкой.
 
@@ -41,8 +37,9 @@
 
 Параметры находятся в `.github/workflows/publish.yml`:
 
+- `TELEGRAM_CHAT_ID` — адрес канала, сейчас `@xtbtch`;
 - `MAX_AGE_DAYS` — максимальный возраст новости;
 - `MAX_POSTS_PER_RUN` — максимум публикаций за запуск;
 - `MIN_IMPORTANCE_SCORE` — порог важности.
 
-История публикаций хранится в `data/posted.json` и автоматически обновляется после успешной публикации.
+История публикаций хранится в `data/posted.json` и автоматически обновляется только после успешной публикации.
