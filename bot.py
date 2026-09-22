@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterable
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 
 import feedparser
 import requests
@@ -69,6 +69,16 @@ class Story:
     summary: str
     score: int
     fingerprint: str
+    image_url: str = ""
+    video_url: str = ""
+
+
+@dataclass(frozen=True)
+class RenderedPost:
+    title: str
+    details: str
+    image_url: str = ""
+    video_url: str = ""
 
 
 def clean_text(value: str) -> str:
@@ -120,6 +130,56 @@ def importance(title: str, summary: str, source_weight: int, published: datetime
     return score
 
 
+
+def entry_media(entry: dict) -> tuple[str, str]:
+    image_url = ""
+    video_url = ""
+    candidates: list[dict] = []
+    for key in ("media_content", "media_thumbnail", "enclosures"):
+        value = entry.get(key, [])
+        if isinstance(value, list):
+            candidates.extend(item for item in value if isinstance(item, dict))
+    for link in entry.get("links", []):
+        if isinstance(link, dict) and link.get("rel") == "enclosure":
+            candidates.append(link)
+    image = entry.get("image")
+    if isinstance(image, dict):
+        candidates.append(image)
+
+    for item in candidates:
+        url = str(item.get("url") or item.get("href") or "").strip()
+        if not url.startswith(("http://", "https://")):
+            continue
+        media_type = str(item.get("type") or item.get("medium") or "").lower()
+        path = urlsplit(url).path.lower()
+        if not video_url and (
+            media_type.startswith("video/")
+            or media_type == "video"
+            or path.endswith((".mp4", ".m4v", ".mov", ".webm"))
+        ):
+            video_url = url
+        elif not image_url and (
+            media_type.startswith("image/")
+            or media_type == "image"
+            or path.endswith((".jpg", ".jpeg", ".png", ".webp"))
+        ):
+            image_url = url
+    return image_url, video_url
+
+
+def meta_content(page: str, key: str) -> str:
+    escaped = re.escape(key)
+    patterns = (
+        rf'<meta\\b[^>]*(?:property|name)=[\"\\\']{escaped}[\"\\\'][^>]*content=[\"\\\']([^\"\\\']+)',
+        rf'<meta\\b[^>]*content=[\"\\\']([^\"\\\']+)[\"\\\'][^>]*(?:property|name)=[\"\\\']{escaped}[\"\\\']',
+    )
+    for pattern in patterns:
+        match = re.search(pattern, page, flags=re.IGNORECASE)
+        if match:
+            return html.unescape(match.group(1)).strip()
+    return ""
+
+
 def fetch_stories() -> list[Story]:
     cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     stories: list[Story] = []
@@ -139,6 +199,7 @@ def fetch_stories() -> list[Story]:
                 summary = clean_text(entry.get("summary", entry.get("description", "")))
                 if not title or not url:
                     continue
+                image_url, video_url = entry_media(entry)
                 stories.append(Story(
                     title=title,
                     url=url,
@@ -147,6 +208,8 @@ def fetch_stories() -> list[Story]:
                     summary=summary,
                     score=importance(title, summary, source_weight, published),
                     fingerprint=fingerprint(title),
+                    image_url=image_url,
+                    video_url=video_url,
                 ))
             LOG.info("Feed %s: %d fresh stories", source, len(stories) - before_count)
         except Exception as exc:
@@ -155,31 +218,48 @@ def fetch_stories() -> list[Story]:
 
 
 
-def fetch_article_context(story: Story) -> str:
+def fetch_article_context(story: Story) -> tuple[str, str, str]:
     evidence = story.summary
+    image_url = story.image_url
+    video_url = story.video_url
     headers = {"User-Agent": "WorldPoliticsNewsBot/1.0 (+https://github.com/xtbtch4/world-politics-news-x)"}
     try:
         response = requests.get(story.url, headers=headers, timeout=15)
         response.raise_for_status()
         if "html" not in response.headers.get("Content-Type", "").lower():
-            return evidence[:6500]
+            return evidence[:6500], image_url, video_url
         page = response.text[:1_500_000]
+
+        if not image_url:
+            image_url = meta_content(page, "og:image") or meta_content(page, "twitter:image")
+            if image_url:
+                image_url = urljoin(story.url, image_url)
+        if not video_url:
+            candidate_video = (
+                meta_content(page, "og:video:url")
+                or meta_content(page, "og:video")
+                or meta_content(page, "twitter:player:stream")
+            )
+            video_path = urlsplit(candidate_video).path.lower()
+            if video_path.endswith((".mp4", ".m4v", ".mov", ".webm")):
+                video_url = urljoin(story.url, candidate_video)
+
         page = re.sub(
-            r"<(script|style|noscript|svg|form|nav)\b[^>]*>.*?</\1>",
+            r"<(script|style|noscript|svg|form|nav)\\b[^>]*>.*?</\\1>",
             " ",
             page,
             flags=re.IGNORECASE | re.DOTALL,
         )
         paragraphs = [
             clean_text(value)
-            for value in re.findall(r"<p\b[^>]*>(.*?)</p>", page, re.IGNORECASE | re.DOTALL)
+            for value in re.findall(r"<p\\b[^>]*>(.*?)</p>", page, re.IGNORECASE | re.DOTALL)
         ]
         paragraphs = [value for value in paragraphs if len(value) >= 40]
         if paragraphs:
             evidence = clean_text(f"{story.summary} {' '.join(paragraphs[:40])}")
     except requests.RequestException as exc:
         LOG.info("Article text unavailable for %s: %s", story.source, str(exc).splitlines()[0])
-    return evidence[:6500]
+    return evidence[:6500], image_url, video_url
 
 
 def tagged_value(text: str, tag: str) -> str:
@@ -264,9 +344,11 @@ def extract_response_text(payload: dict) -> str:
     return clean_text(" ".join(parts))
 
 
-def rewrite_story_in_russian(story: Story) -> tuple[str, str, str | None, str | None] | None:
+def rewrite_story_in_russian(
+    story: Story,
+) -> tuple[str, str, str | None, str | None, str, str] | None:
     api_key, model, fallback_model = gemini_config()
-    evidence = fetch_article_context(story)
+    evidence, image_url, video_url = fetch_article_context(story)
     source_text = (
         f"Источник: {story.source}\n"
         f"Оригинальный заголовок: {story.title}\n"
@@ -283,7 +365,9 @@ def rewrite_story_in_russian(story: Story) -> tuple[str, str, str | None, str | 
             "Читатель должен понять суть новости, не переходя по ссылке. "
             "Передавай смысл естественно, без буквальных калек вроде «торгуют ударами». "
             "Не добавляй фактов, оценок, эмоций, домыслов и кликбейта. "
-            "Не повторяй заголовок в изложении и не упоминай, что текст является пересказом. "
+            "Не повторяй и не перефразируй заголовок в первом предложении изложения: "
+            "начинай сразу с новой существенной детали, причины, контекста или последствия. "
+            "Не упоминай, что текст является пересказом. "
             "Если данных мало, напиши более короткое изложение, не заполняя пробелы догадками. "
             "Если в материале есть содержательная прямая цитата с однозначно указанным автором, "
             "выбери одну цитату длиной не более 25 слов, переведи её естественно на русский "
@@ -395,22 +479,57 @@ def rewrite_story_in_russian(story: Story) -> tuple[str, str, str | None, str | 
     if not quote_is_verified:
         original_quote = russian_quote = speaker = None
 
-    return title[:500].rstrip(), summary[:2200].rstrip(), russian_quote, speaker
+    return (
+        title[:500].rstrip(),
+        summary[:2200].rstrip(),
+        russian_quote,
+        speaker,
+        image_url,
+        video_url,
+    )
 
 
-def make_post(story: Story) -> str | None:
+def compact_tokens(value: str) -> set[str]:
+    return {
+        token[:4]
+        for token in re.findall(r"[a-zа-яё0-9]{4,}", value.casefold())
+    }
+
+
+def remove_repeated_lead(title: str, summary: str) -> str:
+    sentences = re.split(r"(?<=[.!?])\\s+", summary, maxsplit=1)
+    if len(sentences) < 2:
+        return summary
+    title_tokens = compact_tokens(title)
+    lead_tokens = compact_tokens(sentences[0])
+    if not title_tokens:
+        return summary
+    overlap = len(title_tokens & lead_tokens) / len(title_tokens)
+    remainder = sentences[1].strip()
+    if overlap >= 0.35 and len(remainder.split()) >= 20:
+        return remainder
+    return summary
+
+
+def make_post(story: Story) -> RenderedPost | None:
     edited = rewrite_story_in_russian(story)
     if not edited:
         return None
-    title, summary, quote, speaker = edited
-    body = f"{title}\n\n{summary}"
+    title, summary, quote, speaker, image_url, video_url = edited
+    summary = remove_repeated_lead(title, summary)
+    details = summary
     if quote and speaker:
-        body += f"\n\n«{quote}» — {speaker}"
-    suffix = f"\n\nИсточник: {story.source}\n{story.url}"
+        details += f"\\n\\n«{quote}» — {speaker}"
+    suffix = f"\\n\\nИсточник: {story.source}\\n{story.url}"
     limit = 4096 - len(suffix)
-    if len(body) > limit:
-        body = body[: max(1, limit - 1)].rstrip() + "…"
-    return body + suffix
+    if len(details) > limit:
+        details = details[: max(1, limit - 1)].rstrip() + "…"
+    return RenderedPost(
+        title=title,
+        details=details + suffix,
+        image_url=image_url,
+        video_url=video_url,
+    )
 
 
 def telegram_config() -> tuple[str, str]:
@@ -426,27 +545,68 @@ def telegram_config() -> tuple[str, str]:
     return token, chat_id
 
 
-def publish(text: str) -> str:
+def telegram_call(token: str, method: str, payload: dict) -> dict:
+    response = requests.post(
+        f"https://api.telegram.org/bot{token}/{method}",
+        json=payload,
+        timeout=40,
+    )
+    if response.status_code != 200:
+        raise RuntimeError(
+            f"Telegram {method} error {response.status_code}: {response.text[:500]}"
+        )
+    result = response.json()
+    if not result.get("ok"):
+        raise RuntimeError(f"Telegram {method} error: {response.text[:500]}")
+    return result
+
+
+def publish(post: RenderedPost) -> str:
     if DRY_RUN:
-        LOG.info("DRY RUN post:\n%s", text)
+        media = post.video_url or post.image_url or "none"
+        LOG.info(
+            "DRY RUN media: %s\\nDRY RUN title: %s\\nDRY RUN details:\\n%s",
+            media,
+            post.title,
+            post.details,
+        )
         return "dry-run"
 
     token, chat_id = telegram_config()
-    response = requests.post(
-        f"https://api.telegram.org/bot{token}/sendMessage",
-        json={
-            "chat_id": chat_id,
-            "text": text,
-            "disable_web_page_preview": False,
-        },
-        timeout=30,
-    )
-    if response.status_code != 200:
-        raise RuntimeError(f"Telegram API error {response.status_code}: {response.text[:500]}")
-    payload = response.json()
-    if not payload.get("ok"):
-        raise RuntimeError(f"Telegram API error: {response.text[:500]}")
-    return str(payload.get("result", {}).get("message_id", "unknown"))
+    media_message_id = None
+    media_attempts = []
+    if post.video_url:
+        media_attempts.append(("sendVideo", "video", post.video_url))
+    if post.image_url:
+        media_attempts.append(("sendPhoto", "photo", post.image_url))
+
+    for method, field, media_url in media_attempts:
+        try:
+            result = telegram_call(
+                token,
+                method,
+                {
+                    "chat_id": chat_id,
+                    field: media_url,
+                    "caption": post.title[:1024],
+                    "supports_streaming": True if method == "sendVideo" else None,
+                },
+            )
+            media_message_id = result.get("result", {}).get("message_id")
+            break
+        except RuntimeError as exc:
+            LOG.warning("Could not send article media via %s: %s", method, exc)
+
+    text = post.details if media_message_id else f"{post.title}\\n\\n{post.details}"
+    message_payload = {
+        "chat_id": chat_id,
+        "text": text,
+        "disable_web_page_preview": bool(media_message_id),
+    }
+    if media_message_id:
+        message_payload["reply_parameters"] = {"message_id": media_message_id}
+    result = telegram_call(token, "sendMessage", message_payload)
+    return str(result.get("result", {}).get("message_id", "unknown"))
 
 
 def main() -> int:
@@ -464,11 +624,11 @@ def main() -> int:
     for story in selected:
         if published_count >= MAX_POSTS:
             break
-        text = make_post(story)
-        if not text:
+        post = make_post(story)
+        if not post:
             LOG.warning("Skipped because Russian translation is unavailable: %s", story.title)
             continue
-        post_id = publish(text)
+        post_id = publish(post)
         published_count += 1
         LOG.info("Published %s from %s: %s", post_id, story.source, story.title)
         if not DRY_RUN:
