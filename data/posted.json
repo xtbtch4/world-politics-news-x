@@ -49,7 +49,9 @@
     "https://nytimes.com/2026/09/22/climate/antonio-guterres-climate-change.html",
     "https://nytimes.com/2026/09/22/us/politics/fact-check-trump-united-nations.html",
     "https://france24.com/en/tv-shows/the-debate/20260922-trump-s-world-leaders-navigate-consequences-of-us-policy",
-    "https://aljazeera.com/video/newsfeed/2026/9/22/trump-my-honour-to-settle-eight-wars-including-war-in-gaza"
+    "https://aljazeera.com/video/newsfeed/2026/9/22/trump-my-honour-to-settle-eight-wars-including-war-in-gaza",
+    "https://nytimes.com/2026/09/21/world/middleeast/yemen-houthis-saudi-war.html",
+    "https://theguardian.com/environment/2026/sep/21/weather-tracker-japan-typhoon-dujuan"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -103,7 +105,9 @@
     "98d667bfe6baec8979baf3a5",
     "19e36cb2ebb306d3b09a0bd1",
     "58bec5167b51c84f7d17e7ca",
-    "668fa71971d6f44f75c613fc"
+    "668fa71971d6f44f75c613fc",
+    "58a360d633b66f409aa291aa",
+    "c715a1fe811cbde6a2eddceb"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -112,7 +116,9 @@
     "antonio guterres summarizes climate change efforts",
     "trump speech fact check",
     "trump general assembly meeting energy crisis 2026",
-    "trump claims settling eight wars general assembly 2024"
+    "trump claims settling eight wars general assembly 2024",
+    "houthis saudi arabia conflict resumption iran attacks",
+    "tropical storm dujuan approaches japan izu islands"
   ],
-  "updated_at": "2026-09-22T18:21:22.583075+00:00"
+  "updated_at": "2026-09-22T18:31:56.855871+00:00"
 }
