@@ -78,7 +78,9 @@
     "https://nytimes.com/2026/09/22/world/middleeast/trump-persian-gulf-leaders-meeting.html",
     "https://nytimes.com/video/us/politics/100000011164965/why-network-tv-stopped-filming-the-president.html",
     "https://nytimes.com/2026/09/22/world/europe/macron-farewell-united-nations-speech.html",
-    "https://france24.com/en/video/20260922-lady-diana-spencer-s-memoir-on-diana-reignites-royal-controversy"
+    "https://france24.com/en/video/20260922-lady-diana-spencer-s-memoir-on-diana-reignites-royal-controversy",
+    "https://france24.com/en/france/20260922-macron-urges-world-stand-firm-against-abuse-of-power-by-empires-final-un-speech",
+    "https://theguardian.com/business/2026/sep/22/nick-clegg-30m-windfall-datacentre-flotation-nscale"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -161,7 +163,9 @@
     "5096cdb377264cff2e518ecf",
     "99d494b0d6ac955f6c887ea6",
     "0cf943c6d51ba3fe6e7ba309",
-    "12d9ede7cc93473995e520fd"
+    "12d9ede7cc93473995e520fd",
+    "4c36f817b3b02f683bd61081",
+    "bdc0c51d01865461b8d25680"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -200,7 +204,9 @@
     "german government restricts alternative germany access classified intelligence",
     "trump bans news outlets white house coverage protest",
     "macron general assembly farewell address september 2024",
-    "spencer memoir diana royal controversy 2026"
+    "spencer memoir diana royal controversy 2026",
+    "emmanuel macron speech september 2026",
+    "nick clegg nscale stock market float 2024"
   ],
-  "updated_at": "2026-09-22T20:42:43.161636+00:00"
+  "updated_at": "2026-09-22T20:52:58.279482+00:00"
 }
