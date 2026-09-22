@@ -87,7 +87,9 @@
     "https://nytimes.com/live/2026/09/22/world/un-general-assembly-trump-speech-news/vietnams-leader-is-likely-to-warn-of-threats-to-middle-powers",
     "https://nytimes.com/2026/09/22/business/energy-environment/trump-diesel-exports-iran-war.html",
     "https://bbc.co.uk/news/articles/c8r4v7n6py97o",
-    "https://politico.com/news/2026/09/22/chinese-president-arrives-in-the-u-s-with-new-energy-leverage-as-war-rattles-global-markets-01088268"
+    "https://politico.com/news/2026/09/22/chinese-president-arrives-in-the-u-s-with-new-energy-leverage-as-war-rattles-global-markets-01088268",
+    "https://france24.com/en/europe/20260922-zelensky-says-ukraine-is-ready-for-an-energy-ceasefire-with-russia",
+    "https://nytimes.com/2026/09/22/us/politics/supreme-court-surrogate-abortion-custody.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -179,7 +181,9 @@
     "fda2e6a84d4aeff2776fc9b1",
     "78be373fee14a13c7f83bf1d",
     "2f4ab009a2fc0af7b9966421",
-    "782db8d4507a9a31c8eb27e9"
+    "782db8d4507a9a31c8eb27e9",
+    "588fec39c54e7e156b295e73",
+    "d1311eebc1697286241f32c9"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -227,7 +231,9 @@
     "lam general assembly speech vietnam middle powers 2024",
     "trump proposes banning diesel exports",
     "morocco parliamentary elections september 2025",
-    "jinping trump china energy leverage conflict"
+    "jinping trump china energy leverage conflict",
+    "zelensky proposes energy ceasefire russia general assembly",
+    "supreme court surrogate custody dispute"
   ],
-  "updated_at": "2026-09-22T21:33:37.629033+00:00"
+  "updated_at": "2026-09-22T21:42:28.884783+00:00"
 }
