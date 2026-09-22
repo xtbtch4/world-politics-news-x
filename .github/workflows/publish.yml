@@ -27,6 +27,7 @@ jobs:
       MAX_AGE_DAYS: "7"
       MAX_POSTS_PER_RUN: "2"
       MIN_IMPORTANCE_SCORE: "5"
+      DRY_RUN: ${{ github.event_name == 'push' && 'true' || 'false' }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
