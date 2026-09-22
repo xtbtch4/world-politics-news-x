@@ -168,13 +168,11 @@ def entry_media(entry: dict) -> tuple[str, str]:
 
 
 def meta_content(page: str, key: str) -> str:
+    attribute_pattern = r"""([a-zA-Z_:.-]+)\s*=\s*['"]([^'"]*)['"]"""
     for tag in re.findall(r"<meta\b[^>]*>", page, flags=re.IGNORECASE):
         attributes = {
             name.casefold(): html.unescape(value).strip()
-            for name, value in re.findall(
-                r"([a-zA-Z_:.-]+)\s*=\s*['\\"]([^'\\"]*)['\\"]",
-                tag,
-            )
+            for name, value in re.findall(attribute_pattern, tag)
         }
         marker = attributes.get("property") or attributes.get("name") or ""
         if marker.casefold() == key.casefold():
