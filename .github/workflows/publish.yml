@@ -8,7 +8,7 @@ on:
     paths:
       - "data/run-now.txt"
   schedule:
-    - cron: "17 * * * *"
+    - cron: "*/10 * * * *"
 
 permissions:
   contents: write
