@@ -1,11 +1,15 @@
 {
   "posted_urls": [
     "https://www.bbc.co.uk/news/articles/cqy7z275yx65o?at_medium=RSS&at_campaign=rss",
-    "https://www.theguardian.com/world/live/2026/sep/22/eu-trump-russia-putin-sanctions-ukraine-greenland-denmark-zelenskyy-latest-news-updates"
+    "https://www.theguardian.com/world/live/2026/sep/22/eu-trump-russia-putin-sanctions-ukraine-greenland-denmark-zelenskyy-latest-news-updates",
+    "https://www.france24.com/en/video/20260922-uk-to-offer-saudi-arabia-aerial-refueling-to-counter-houthi-attacks",
+    "https://www.dw.com/en/russia-ukraine-trade-deadly-strikes-as-zelenskyy-attends-unga/a-79366022?maca=en-rss-en-all-1573-rdf"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
-    "26881f21ebbf9d5bbe22a332"
+    "26881f21ebbf9d5bbe22a332",
+    "6077f1ced00dca3082505e75",
+    "68ef651a56b81ef910756f2d"
   ],
-  "updated_at": "2026-09-22T13:06:18.046306+00:00"
+  "updated_at": "2026-09-22T13:09:52.815806+00:00"
 }
