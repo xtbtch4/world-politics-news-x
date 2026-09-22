@@ -80,7 +80,9 @@
     "https://nytimes.com/2026/09/22/world/europe/macron-farewell-united-nations-speech.html",
     "https://france24.com/en/video/20260922-lady-diana-spencer-s-memoir-on-diana-reignites-royal-controversy",
     "https://france24.com/en/france/20260922-macron-urges-world-stand-firm-against-abuse-of-power-by-empires-final-un-speech",
-    "https://theguardian.com/business/2026/sep/22/nick-clegg-30m-windfall-datacentre-flotation-nscale"
+    "https://theguardian.com/business/2026/sep/22/nick-clegg-30m-windfall-datacentre-flotation-nscale",
+    "https://nytimes.com/2026/09/22/world/ai-cold-war-iran-un.html",
+    "https://theguardian.com/us-news/2026/sep/22/donald-trump-unga-speech"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -165,7 +167,9 @@
     "0cf943c6d51ba3fe6e7ba309",
     "12d9ede7cc93473995e520fd",
     "4c36f817b3b02f683bd61081",
-    "bdc0c51d01865461b8d25680"
+    "bdc0c51d01865461b8d25680",
+    "848ddd1fbbd5ccfe5c0bcac6",
+    "8b6b394407622cea745c90d6"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -206,7 +210,9 @@
     "macron general assembly farewell address september 2024",
     "spencer memoir diana royal controversy 2026",
     "emmanuel macron speech september 2026",
-    "nick clegg nscale stock market float 2024"
+    "nick clegg nscale stock market float 2024",
+    "china regulation cold war experience comparison",
+    "donald trump threatens iran general assembly speech"
   ],
-  "updated_at": "2026-09-22T20:52:58.279482+00:00"
+  "updated_at": "2026-09-22T21:02:13.476497+00:00"
 }
