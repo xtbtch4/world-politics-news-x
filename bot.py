@@ -192,12 +192,56 @@ def has_cyrillic(value: str) -> bool:
     return bool(re.search(r"[А-Яа-яЁё]", value))
 
 
+def normalize_news_english(value: str) -> str:
+    replacements = [
+        (r"\btrade deadly strikes\b", "exchange deadly attacks"),
+        (r"\btrade strikes\b", "exchange attacks"),
+        (r"\bUNGA\b", "UN General Assembly"),
+        (r"\bslams\b", "strongly criticizes"),
+        (r"\bblasts\b", "strongly criticizes"),
+        (r"\beyes\b", "considers"),
+        (r"\bmulls\b", "considers"),
+        (r"\bvows\b", "promises"),
+        (r"\bset to\b", "is expected to"),
+        (r"\bamid\b", "during"),
+    ]
+    result = value
+    for pattern, replacement in replacements:
+        result = re.sub(pattern, replacement, result, flags=re.IGNORECASE)
+    return result
+
+
+def polish_russian_headline(original: str, translated: str) -> str:
+    value = translated
+    replacements = [
+        (r"\bторгуют(?:ся)?\s+(?:смертельными|смертоносными)\s+ударами\b",
+         "обмениваются смертоносными ударами"),
+        (r"\bобмениваются смертельными атаками\b",
+         "обмениваются смертоносными ударами"),
+        (r"\bГенеральную Ассамблею ООН\b", "Генассамблею ООН"),
+    ]
+    for pattern, replacement in replacements:
+        value = re.sub(pattern, replacement, value, flags=re.IGNORECASE)
+
+    if re.search(r"\btrade (?:deadly )?strikes\b", original, flags=re.IGNORECASE):
+        value = re.sub(
+            r"\bторгуют(?:ся)?\s+[^,.;:]+(?:ударами|атаками)\b",
+            "обмениваются смертоносными ударами",
+            value,
+            flags=re.IGNORECASE,
+        )
+    return clean_text(value)
+
+
 def translate_title(title: str) -> str | None:
     if has_cyrillic(title):
         return title
 
+    prepared_title = normalize_news_english(title)
+
     try:
-        translated = clean_text(GoogleTranslator(source="auto", target="ru").translate(title))
+        translated = clean_text(GoogleTranslator(source="auto", target="ru").translate(prepared_title))
+        translated = polish_russian_headline(title, translated)
         if translated and has_cyrillic(translated):
             return translated
         LOG.warning("Google returned text without Russian translation")
@@ -206,8 +250,9 @@ def translate_title(title: str) -> str | None:
 
     try:
         translated = clean_text(
-            MyMemoryTranslator(source="en-GB", target="ru-RU").translate(title)
+            MyMemoryTranslator(source="en-GB", target="ru-RU").translate(prepared_title)
         )
+        translated = polish_russian_headline(title, translated)
         if translated and has_cyrillic(translated):
             return translated
         LOG.warning("Fallback returned text without Russian translation")
