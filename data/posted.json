@@ -142,7 +142,9 @@
     "https://france24.com/en/russia-attacks-four-ukrainian-regions-overnight",
     "https://euronews.com/2026/09/23/tigray-rebels-seize-airport-and-clash-with-federal-forces-as-fighting-in-ethiopia-reignite",
     "https://france24.com/en/tv-shows/focus/20260923-china-cracks-down-on-scam-centres-in-neighbouring-myanmar",
-    "https://nytimes.com/2026/09/23/world/middleeast/syria-un-general-assembly-al-sharaa.html"
+    "https://nytimes.com/2026/09/23/world/middleeast/syria-un-general-assembly-al-sharaa.html",
+    "https://bbc.co.uk/news/articles/cry8zwwq21pxo",
+    "https://npr.org/2026/09/23/g-s1-144536/floods-climate-nepal-himalayas-dams-hydropower"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -289,7 +291,9 @@
     "3a7ee82d990c7be44b0230ac",
     "d983101a186b4a43782c2b94",
     "4191c139fce03a23b02dfc69",
-    "094f86c026a416eddcf83e7e"
+    "094f86c026a416eddcf83e7e",
+    "dd981baedf670e15da041e03",
+    "c197e44dab0e9659cc3fc513"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -392,7 +396,9 @@
     "russia ukraine missile drone strikes oil refinery zelensky trump york",
     "tplf federal forces clash tigray afar airport seizure",
     "china cracks down myanmar scam centres september 2026",
-    "ahmed sharaa syria general assembly diplomatic standing"
+    "ahmed sharaa syria general assembly diplomatic standing",
+    "tigray forces seize mekelle airport ethiopia",
+    "nepal glacial flood hydropower damage august 2024"
   ],
-  "updated_at": "2026-09-23T11:53:19.532034+00:00"
+  "updated_at": "2026-09-23T12:04:36.983711+00:00"
 }
