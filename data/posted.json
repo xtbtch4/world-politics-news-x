@@ -152,7 +152,9 @@
     "https://nytimes.com/2026/09/23/world/asia/unga-myanmar-united-nations-ambassador.html",
     "https://aljazeera.com/video/newsfeed/2026/9/23/priests-against-genocide-hold-shroud-with-names-of-children-killed-in-gaza",
     "https://france24.com/en/video/20260923-us-says-wants-ukraine-russia-to-end-strikes-on-energy-sites-1",
-    "https://france24.com/en/video/20260923-zelenskyy-set-to-address-un-as-russia-strikes-kyiv-1"
+    "https://france24.com/en/video/20260923-zelenskyy-set-to-address-un-as-russia-strikes-kyiv-1",
+    "https://france24.com/en/iran-s-pezeshkian-tells-un-his-country-is-victim-of-us-terrorism",
+    "https://theguardian.com/world/2026/sep/23/eus-canada-offer-is-more-mood-than-reality-but-it-could-hint-at-a-future-geometry-for-the-bloc"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -309,7 +311,9 @@
     "6cf2ae2c06fd84195c897914",
     "83d715710ed4ed973d92cf1a",
     "98135ef837d3ae3bc88903fe",
-    "bd5dba47ebdfc48b00379ba5"
+    "bd5dba47ebdfc48b00379ba5",
+    "7ab13d685dee52bb99b89b27",
+    "c051aa3190878bbf10d88065"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -422,7 +426,9 @@
     "kyaw moe tun myanmar envoy status maintenance",
     "priests against genocide demonstration rome dead children gaza lebanon",
     "says wants ukraine russia end strikes energy sites",
-    "zelenskyy set address russia strikes kyiv"
+    "zelenskyy set address russia strikes kyiv",
+    "iran pezeshkian tells his country victim terrorism",
+    "canada offer more mood than reality but could hint future geometry bloc"
   ],
-  "updated_at": "2026-09-23T15:51:21.283972+00:00"
+  "updated_at": "2026-09-23T16:02:02.697058+00:00"
 }
