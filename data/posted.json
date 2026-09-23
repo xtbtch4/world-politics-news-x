@@ -225,7 +225,9 @@
     "https://nytimes.com/2026/09/23/world/board-of-peace-gaza-6-month-plan.html",
     "https://theguardian.com/environment/2026/sep/23/uk-climate-crisis-national-security-report-suppressed-starmer-ed-miliband",
     "https://nytimes.com/2026/09/23/world/americas/trump-venezuela-delcy-rodriguez.html",
-    "https://france24.com/en/americas/20260923-ai-leaders-urge-caution-at-un-with-anthropic-chief-pledging-to-slow-down"
+    "https://france24.com/en/americas/20260923-ai-leaders-urge-caution-at-un-with-anthropic-chief-pledging-to-slow-down",
+    "https://bbc.co.uk/news/articles/c6790yrgzq25o",
+    "https://nytimes.com/2026/09/23/us/politics/china-xi-health.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -455,7 +457,9 @@
     "6050086af89c6464ac0e83fd",
     "df35d27366a5f98ab76dffc2",
     "251202284b458ac9a57f985c",
-    "bcabd99da1377292509812cb"
+    "bcabd99da1377292509812cb",
+    "30251fd392608234d21f8c9c",
+    "f83ae9f09a5091104c361f28"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -641,7 +645,9 @@
     "trump board peace gaza plan general assembly",
     "miliband presents climate security report york september 2024",
     "venezuelan leader address york",
-    "leaders security council york september 2026"
+    "leaders security council york september 2026",
+    "federal judge delays ruling white house media ban",
+    "jinping health scrutiny china"
   ],
-  "updated_at": "2026-09-23T21:51:02.659496+00:00"
+  "updated_at": "2026-09-23T22:01:47.035202+00:00"
 }
