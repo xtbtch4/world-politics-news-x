@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sys
 
 import requests
@@ -129,13 +130,18 @@ def translate_to_russian(text: str) -> str:
 
 
 def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
-    post = _original_make_post(story)
+    gemini_disabled = os.getenv("DISABLE_GEMINI", "false").lower() in {"1", "true", "yes", "on"}
+    if gemini_disabled:
+        bot.LOG.info("Gemini disabled by DISABLE_GEMINI; using translation fallback")
+        post = None
+    else:
+        post = _original_make_post(story)
+
     if post is not None:
         return post
 
-    # Gemini may be rate-limited or temporarily unavailable. In that case,
-    # translate the source material with independent translation services instead
-    # of dropping the story. If all translators fail, publish the original.
+    # If Gemini is disabled, rate-limited or temporarily unavailable, translate
+    # source material with independent translation services instead of dropping it.
     evidence, image_url, video_url = bot.fetch_article_context(story)
     source_summary = bot.clean_text(story.summary or evidence)
     if not source_summary:
@@ -163,13 +169,16 @@ def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
         event_key = f"source-story-{story.fingerprint}"
 
     if translated:
-        bot.LOG.warning(
-            "Gemini unavailable or unusable; publishing Russian translation fallback: %s",
-            story.title,
-        )
+        if gemini_disabled:
+            bot.LOG.info("Publishing Russian translation with Gemini disabled: %s", story.title)
+        else:
+            bot.LOG.warning(
+                "Gemini unavailable or unusable; publishing Russian translation fallback: %s",
+                story.title,
+            )
     else:
         bot.LOG.warning(
-            "Gemini and fallback translators unavailable; publishing source-language fallback: %s",
+            "Translation unavailable; publishing source-language fallback: %s",
             story.title,
         )
 
