@@ -111,7 +111,9 @@
     "https://theguardian.com/australia-news/2026/sep/23/angus-taylor-pledges-to-repeal-swathe-of-climate-policies-saying-australia-has-done-its-bit",
     "https://dw.com/en/india-news-el-nino-heat-could-kill-15-800-by-february-report-warns/live-79382508",
     "https://dw.com/en/sri-lanka-15-men-jailed-for-life-in-2019-easter-bombings/a-79382342",
-    "https://aljazeera.com/news/2026/9/23/at-least-11-people-killed-in-south-africa-township-shooting"
+    "https://aljazeera.com/news/2026/9/23/at-least-11-people-killed-in-south-africa-township-shooting",
+    "https://france24.com/en/europe/20260923-azerbaijan-pardons-jailed-frenchman-after-eu-lifts-sanctions-on-russian-oligarchs",
+    "https://nytimes.com/2026/09/23/world/africa/morocco-election-youth-frustration.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -227,7 +229,9 @@
     "c6065b3a4649037efe7d6599",
     "f02e0bc81597641f8cb932f4",
     "f91ddbb5616d5e43f728048e",
-    "b77dd96115e4620ac6d4cffd"
+    "b77dd96115e4620ac6d4cffd",
+    "c1029ec933e4e0fcb2e58beb",
+    "0b741853ededa7404a16b420"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -299,7 +303,9 @@
     "angus taylor coalition climate policies repeal election plan australia",
     "climate impact lab report india nino heat deaths",
     "sri lanka 2019 easter bombing convictions colombo",
-    "armed attack durban township dead"
+    "armed attack durban township dead",
+    "azerbaijan pardons martin ryan lifts usmanov sanctions",
+    "morocco youth frustration election migration 2021"
   ],
-  "updated_at": "2026-09-23T07:53:23.263392+00:00"
+  "updated_at": "2026-09-23T08:03:07.463923+00:00"
 }
