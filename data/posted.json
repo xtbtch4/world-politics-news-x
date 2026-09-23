@@ -184,7 +184,9 @@
     "https://nytimes.com/2026/09/23/world/middleeast/iran-president-un-speech.html",
     "https://aljazeera.com/news/2026/9/23/russian-drone-strikes-target-kyiv-infrastructure-after-zelenskyy-trump-talk",
     "https://france24.com/en/middle-east/20260923-golan-heights-will-remain-syrian-president-al-sharaa-vows-to-un",
-    "https://nytimes.com/2026/09/23/business/media/fox-trump-press-pool-ban.html"
+    "https://nytimes.com/2026/09/23/business/media/fox-trump-press-pool-ban.html",
+    "https://npr.org/2026/09/23/nx-s1-5978863/iran-president-united-nations-general-assembly",
+    "https://theguardian.com/environment/2026/sep/23/germany-commits-for-first-time-to-phasing-out-fossil-fuels-by-2045"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -373,7 +375,9 @@
     "58fa25fe71d63cc690a2ce42",
     "8ab96b0f178ad131076d4995",
     "11095b365a0d0cca47743548",
-    "775d05e268c9216b64ed07f4"
+    "775d05e268c9216b64ed07f4",
+    "818af0e80d346a61961a41e0",
+    "d6ca1d9cfc3685b42ec4c7c6"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -518,7 +522,9 @@
     "masoud pezeshkian speech nuclear program diplomacy 2024",
     "russia attacks ukraine kill six zelenskyy trump talks",
     "ahmed sharaa golan heights york september 2026",
-    "fox news suspends trump pool coverage press ban"
+    "fox news suspends trump pool coverage press ban",
+    "iran president pezeshkian general assembly york 2025",
+    "germany phase out fossil fuels 2045 roadmap"
   ],
-  "updated_at": "2026-09-23T18:21:44.053330+00:00"
+  "updated_at": "2026-09-23T18:32:26.640958+00:00"
 }
