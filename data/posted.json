@@ -214,7 +214,9 @@
     "https://nytimes.com/2026/09/23/world/un-general-assembly-walkout.html",
     "https://aljazeera.com/video/newsfeed/2026/9/23/23-09-sv-israeli-solider-injured-leiter-il",
     "https://nytimes.com/live/2026/09/23/world/un-general-assembly-iran-ukraine/irans-president-says-his-country-will-not-give-up-its-right-to-a-peaceful-nuclear-program",
-    "https://aljazeera.com/video/newsfeed/2026/9/23/ethiopia-warns-of-destruction-as-tigray-rebels-launch-offensive"
+    "https://aljazeera.com/video/newsfeed/2026/9/23/ethiopia-warns-of-destruction-as-tigray-rebels-launch-offensive",
+    "https://nytimes.com/2026/09/23/world/europe/zelensky-speech-russia-war.html",
+    "https://nytimes.com/2026/09/23/us/politics/trump-putin-g20-summit.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -433,7 +435,9 @@
     "e3ff655ced8263c2265a5222",
     "2cfbbd34f7f23fbda7d3bb74",
     "b8973f0a4d41d7f061eec6ad",
-    "f2b099832276ae3594192bb5"
+    "f2b099832276ae3594192bb5",
+    "673badfd3c41eac7e78def7f",
+    "d9acc04bf5f41d1eee061f52"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -608,7 +612,9 @@
     "walkouts general assembly are somewhat tradition",
     "israeli soldier wounded car ramming west bank",
     "iran president nuclear program right statement",
-    "ethiopian president taye atske selassie warnstigray rebels offensive general assembly"
+    "ethiopian president taye atske selassie warnstigray rebels offensive general assembly",
+    "zelensky warns russia war expand ukraine 2024",
+    "trump invites putin g20 summit miami"
   ],
-  "updated_at": "2026-09-23T20:50:52.387818+00:00"
+  "updated_at": "2026-09-23T21:01:24.997973+00:00"
 }
