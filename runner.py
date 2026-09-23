@@ -5,7 +5,7 @@ import sys
 
 import requests
 
-# Use Gemini Flash Lite as the only translator/rewriter.
+# Use Gemini Flash Lite as the primary translator/rewriter.
 os.environ["GEMINI_MODEL"] = "gemini-3.5-flash-lite"
 os.environ["GEMINI_FALLBACK_MODEL"] = "gemini-3.5-flash-lite"
 os.environ["DISABLE_GEMINI"] = "false"
@@ -63,6 +63,106 @@ bot.requests.post = post_with_gemini_error_logging
 _original_make_post = bot.make_post
 
 
+def openai_output_text(payload: dict) -> str:
+    direct = payload.get("output_text")
+    if isinstance(direct, str) and direct.strip():
+        return direct.strip()
+
+    parts: list[str] = []
+    for item in payload.get("output", []) or []:
+        if not isinstance(item, dict):
+            continue
+        for content in item.get("content", []) or []:
+            if not isinstance(content, dict):
+                continue
+            text = content.get("text")
+            if isinstance(text, str) and text.strip():
+                parts.append(text.strip())
+    return "\n".join(parts).strip()
+
+
+def openai_translation_fallback(story: bot.Story) -> bot.RenderedPost | None:
+    api_key = os.getenv("OPENAI_API_KEY", "").strip()
+    if not api_key:
+        bot.LOG.info("OPENAI_API_KEY is not configured; OpenAI fallback skipped")
+        return None
+
+    model = os.getenv("OPENAI_MODEL", "gpt-5.6-luna").strip() or "gpt-5.6-luna"
+    evidence, image_url, video_url = bot.fetch_article_context(story)
+    source_text = bot.clean_text(evidence or story.summary)
+    if not source_text:
+        source_text = story.summary
+
+    prompt = f"""Translate this news item into natural, fluent Russian for a Telegram news channel.
+Preserve the meaning, names, numbers and attribution exactly. Do not invent facts, opinions or context.
+Use neutral news style. Do not repeat the headline at the start of the summary.
+Return exactly these two tags and nothing else:
+<TITLE>Russian headline</TITLE>
+<SUMMARY>Russian summary, concise but informative</SUMMARY>
+
+SOURCE TITLE:
+{story.title}
+
+SOURCE TEXT:
+{source_text[:5500]}
+"""
+
+    try:
+        response = requests.post(
+            "https://api.openai.com/v1/responses",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": model,
+                "input": prompt,
+                "max_output_tokens": 1200,
+            },
+            timeout=40,
+        )
+    except requests.RequestException as exc:
+        bot.LOG.warning("OpenAI fallback network error: %s", str(exc).splitlines()[0])
+        return None
+
+    if response.status_code not in {200, 201}:
+        body = bot.clean_text(response.text)
+        bot.LOG.warning(
+            "OpenAI fallback error HTTP %s: %s",
+            response.status_code,
+            body[:1200] or "<empty body>",
+        )
+        return None
+
+    try:
+        payload = response.json()
+    except ValueError:
+        bot.LOG.warning("OpenAI fallback returned invalid JSON")
+        return None
+
+    text = openai_output_text(payload)
+    title = bot.tagged_value(text, "TITLE")
+    summary = bot.tagged_value(text, "SUMMARY")
+    if not title or not summary or not bot.has_cyrillic(title) or not bot.has_cyrillic(summary):
+        bot.LOG.warning("OpenAI fallback returned unusable Russian output")
+        return None
+
+    event_key = bot.normalize_event_key(story.title)
+    if len(event_key.split()) < 3:
+        event_key = f"source-story-{story.fingerprint}"
+
+    bot.LOG.info("OpenAI Russian translation fallback succeeded: %s", story.title)
+    return bot.RenderedPost(
+        title=title[:500].rstrip(),
+        summary=summary[:2200].rstrip(),
+        quote_line="",
+        source_line=f"Источник: {story.source}\n{story.url}",
+        event_key=event_key,
+        image_url=image_url or story.image_url,
+        video_url=video_url or story.video_url,
+    )
+
+
 def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
     global _gemini_attempted, _gemini_cached_response, _gemini_cached_exception
 
@@ -82,8 +182,11 @@ def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
     if post is not None:
         return post
 
-    # Do not use low-quality machine-translation fallbacks. If Gemini is
-    # unavailable, publish the original source-language title and summary.
+    # Gemini failed: try OpenAI once before falling back to the source language.
+    openai_post = openai_translation_fallback(story)
+    if openai_post is not None:
+        return openai_post
+
     evidence, image_url, video_url = bot.fetch_article_context(story)
     summary = bot.clean_text(story.summary or evidence)
     if not summary:
@@ -94,7 +197,7 @@ def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
         event_key = f"source-story-{story.fingerprint}"
 
     bot.LOG.warning(
-        "Gemini unavailable or unusable; publishing source language without translation: %s",
+        "Gemini and OpenAI unavailable or unusable; publishing source language: %s",
         story.title,
     )
 
