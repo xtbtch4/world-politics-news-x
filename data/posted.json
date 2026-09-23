@@ -194,7 +194,9 @@
     "https://theguardian.com/uk-news/2026/sep/23/argentina-president-attacks-un-over-inaction-on-falkland-islands-sovereignty",
     "https://france24.com/en/live-news/20260923-zelensky-says-putin-using-fighters-from-47-countries-in-ukraine-war",
     "https://france24.com/en/americas/20260923-video-no-proof-plane-hit-twin-tower-9-11",
-    "https://nytimes.com/2026/09/23/us/politics/ai-us-china-trump-xi-economy.html"
+    "https://nytimes.com/2026/09/23/us/politics/ai-us-china-trump-xi-economy.html",
+    "https://news.un.org/feed/view/en/story/2026/09/1168372",
+    "https://nytimes.com/2026/09/23/us/politics/as-xi-visits-washington-trump-plays-down-chinas-actions-against-us-interests.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -393,7 +395,9 @@
     "61c733587712643c11105413",
     "e5e9c79e523cd0cf41d80c34",
     "4d46139900392d39f67007a5",
-    "0f0165fab56dc11c0315fd7c"
+    "0f0165fab56dc11c0315fd7c",
+    "b93432fc3dd01c201b16002c",
+    "18356645255aa7b36ee9515f"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -548,7 +552,9 @@
     "javier milei general assembly falklands dispute september 2024",
     "zelensky accuses russia using foreign fighters",
     "andrew bridgen south tower video claim september 2026",
-    "jinping trump washington development comparison"
+    "jinping trump washington development comparison",
+    "world leaders discuss climate change impacts action 2026",
+    "trump downplays china actions visit washington"
   ],
-  "updated_at": "2026-09-23T19:11:33.093641+00:00"
+  "updated_at": "2026-09-23T19:21:17.562047+00:00"
 }
