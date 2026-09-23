@@ -202,7 +202,9 @@
     "https://nytimes.com/2026/09/23/us/politics/polls-us-china-trump-xi.html",
     "https://theguardian.com/society/2026/sep/23/save-the-children-officially-warned-by-regulator-over-staff-put-at-risk-in-yemen",
     "https://aljazeera.com/news/2026/9/23/zelenskyy-calls-for-sustained-pressure-on-patient-zero-putin-in-un-speech",
-    "https://aljazeera.com/video/newsfeed/2026/9/23/09-23-mohsin-rezai-airlines-clip-mp4"
+    "https://aljazeera.com/video/newsfeed/2026/9/23/09-23-mohsin-rezai-airlines-clip-mp4",
+    "https://france24.com/en/europe/20260923-putin-using-citizens-from-47-countries-to-fight-ukraine-zelensky-tells-un",
+    "https://france24.com/en/video/20260923-replay-ukrainian-president-zelensky-addresses-the-un-general-assembly"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -409,7 +411,9 @@
     "f797d4e237243f4069a10e09",
     "9e8a45d177c7b8840ac5ef62",
     "68a9f6bd39658a018a91151b",
-    "65712afbec044369c2826420"
+    "65712afbec044369c2826420",
+    "e4bf8fede8362b691f0186e1",
+    "9b9fd5821bee51a5b85bc3b2"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -572,7 +576,9 @@
     "trump welcomes positive american view china 2023",
     "save children officially warned regulator staff put risk yemen",
     "zelenskyy calls pressure russia general assembly",
-    "iran threatens countries enforcing airline sanctions"
+    "iran threatens countries enforcing airline sanctions",
+    "zelensky general assembly accuses putin countries 2026",
+    "replay ukrainian president zelensky addresses general assembly"
   ],
-  "updated_at": "2026-09-23T19:50:59.177283+00:00"
+  "updated_at": "2026-09-23T20:01:27.565170+00:00"
 }
