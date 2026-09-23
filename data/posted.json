@@ -105,7 +105,9 @@
     "https://politico.eu/article/romania-siegfried-muresan-political-deadlock-risks-handing-power-far-right",
     "https://aljazeera.com/news/2026/9/23/zelenskyy-says-ukraine-ready-for-energy-truce-with-russia-after-trump-talks",
     "https://dw.com/en/south-africa-11-killed-in-attack-on-house-party/a-79382743",
-    "https://aljazeera.com/video/newsfeed/2026/9/23/uk-prime-minister-vows-not-to-stand-by-as-palestinians-suffer"
+    "https://aljazeera.com/video/newsfeed/2026/9/23/uk-prime-minister-vows-not-to-stand-by-as-palestinians-suffer",
+    "https://theguardian.com/australia-news/2026/sep/23/missing-boy-gus-lamont-parents-video-message-1m-reward-announced-ntwnfb",
+    "https://bbc.co.uk/news/articles/crgjqxzl097eo"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -215,7 +217,9 @@
     "ec6938b504d068f05f5458b1",
     "696e0eb4be8826a7d1520d36",
     "de28260fdfdedc585c27eeb3",
-    "e82ff179d68006ca814cefe9"
+    "e82ff179d68006ca814cefe9",
+    "a514e2244b34fa840c5d7425",
+    "d7dfe292c6c7d51af84acb4c"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -281,7 +285,9 @@
     "siegfried muresan attempts form romanian government november 2024",
     "zelenskyy trump burnham energy ceasefire talks york",
     "gunmen kill house party kwamakhutha south africa",
-    "andy burnham condemns israel gaza war unga"
+    "andy burnham condemns israel gaza war unga",
+    "gus lamont disappearance reward australia september 2024",
+    "eleven killed mass shooting kwamakhutha durban south africa"
   ],
-  "updated_at": "2026-09-23T07:22:18.300420+00:00"
+  "updated_at": "2026-09-23T07:33:15.837129+00:00"
 }
