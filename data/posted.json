@@ -103,7 +103,9 @@
     "https://aljazeera.com/news/2026/9/23/south-sudan-dissolves-government-ahead-of-first-ever-national-elections",
     "https://euronews.com/2026/09/23/eleven-killed-as-gunmen-open-fire-on-durban-homestead",
     "https://politico.eu/article/romania-siegfried-muresan-political-deadlock-risks-handing-power-far-right",
-    "https://aljazeera.com/news/2026/9/23/zelenskyy-says-ukraine-ready-for-energy-truce-with-russia-after-trump-talks"
+    "https://aljazeera.com/news/2026/9/23/zelenskyy-says-ukraine-ready-for-energy-truce-with-russia-after-trump-talks",
+    "https://dw.com/en/south-africa-11-killed-in-attack-on-house-party/a-79382743",
+    "https://aljazeera.com/video/newsfeed/2026/9/23/uk-prime-minister-vows-not-to-stand-by-as-palestinians-suffer"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -211,7 +213,9 @@
     "f3bceab890d2332470acd5e3",
     "55d5f6fe21e203e616315683",
     "ec6938b504d068f05f5458b1",
-    "696e0eb4be8826a7d1520d36"
+    "696e0eb4be8826a7d1520d36",
+    "de28260fdfdedc585c27eeb3",
+    "e82ff179d68006ca814cefe9"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -275,7 +279,9 @@
     "south sudan president salva kiir dissolves transitional government ahead elections juba december 2024",
     "gunmen kill eleven people durban south africa october 2024",
     "siegfried muresan attempts form romanian government november 2024",
-    "zelenskyy trump burnham energy ceasefire talks york"
+    "zelenskyy trump burnham energy ceasefire talks york",
+    "gunmen kill house party kwamakhutha south africa",
+    "andy burnham condemns israel gaza war unga"
   ],
-  "updated_at": "2026-09-23T07:15:06.908750+00:00"
+  "updated_at": "2026-09-23T07:22:18.300420+00:00"
 }
