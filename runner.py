@@ -5,6 +5,11 @@ import sys
 
 import requests
 
+# Temporary Gemini configuration: use Flash Lite and keep Gemini enabled.
+os.environ["GEMINI_MODEL"] = "gemini-3.5-flash-lite"
+os.environ["GEMINI_FALLBACK_MODEL"] = "gemini-3.5-flash-lite"
+os.environ["DISABLE_GEMINI"] = "false"
+
 import bot
 
 
