@@ -178,7 +178,9 @@
     "https://theguardian.com/commentisfree/2026/sep/23/the-guardian-view-on-russian-disinformation-a-foreign-threat-that-relies-on-uk-complicity",
     "https://theguardian.com/world/2026/sep/23/no-signs-chagos-deal-adapted-suit-donald-trump-officials-believe",
     "https://nytimes.com/2026/09/23/world/middleeast/stanislas-hutin-dead.html",
-    "https://aljazeera.com/news/2026/9/23/trump-pushes-russia-ukraine-energy-truce-can-it-work"
+    "https://aljazeera.com/news/2026/9/23/trump-pushes-russia-ukraine-energy-truce-can-it-work",
+    "https://theguardian.com/environment/2026/sep/23/britain-to-join-eu-global-ocean-monitoring-system-oceaneye",
+    "https://dw.com/en/slovakia-pm-robert-fico-s-nato-article-5-remarks-spark-criticism-and-raise-questions-about-his-country-s-nato-commitment/a-79387050"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -361,7 +363,9 @@
     "50dd7675758885c8d7ac21c7",
     "31d489bdbe18286d47f69b10",
     "a8f18ac81e430e272120fb8a",
-    "0e85a813727f9fb31e11523e"
+    "0e85a813727f9fb31e11523e",
+    "2397a6cad473c33639f82a07",
+    "68fbf9672b53addcd12c90e9"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -500,7 +504,9 @@
     "guardian view russian disinformation foreign threat that relies complicity editorial",
     "signs chagos deal can adapted suit trump say officials",
     "stanislas hutin death algerian war france",
-    "trump zelensky discuss energy truce york"
+    "trump zelensky discuss energy truce york",
+    "join oceaneye science programme york",
+    "slovakia robert fico nato article remarks spark criticism raise questions about his country commitment"
   ],
-  "updated_at": "2026-09-23T17:53:08.522371+00:00"
+  "updated_at": "2026-09-23T18:04:41.984044+00:00"
 }
