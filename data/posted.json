@@ -140,7 +140,9 @@
     "https://nytimes.com/live/2026/09/23/world/un-general-assembly-iran-ukraine",
     "https://aljazeera.com/news/2026/9/23/yemen-government-forces-claim-control-of-mount-qarfan-in-taiz",
     "https://france24.com/en/russia-attacks-four-ukrainian-regions-overnight",
-    "https://euronews.com/2026/09/23/tigray-rebels-seize-airport-and-clash-with-federal-forces-as-fighting-in-ethiopia-reignite"
+    "https://euronews.com/2026/09/23/tigray-rebels-seize-airport-and-clash-with-federal-forces-as-fighting-in-ethiopia-reignite",
+    "https://france24.com/en/tv-shows/focus/20260923-china-cracks-down-on-scam-centres-in-neighbouring-myanmar",
+    "https://nytimes.com/2026/09/23/world/middleeast/syria-un-general-assembly-al-sharaa.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -285,7 +287,9 @@
     "19eee9c0b73b3779a587a0fe",
     "17b122fb73c8a830bfe724b4",
     "3a7ee82d990c7be44b0230ac",
-    "d983101a186b4a43782c2b94"
+    "d983101a186b4a43782c2b94",
+    "4191c139fce03a23b02dfc69",
+    "094f86c026a416eddcf83e7e"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -386,7 +390,9 @@
     "masoud pezeshkian general assembly address iran tension",
     "yemen government forces capture mount qarfan taiz",
     "russia ukraine missile drone strikes oil refinery zelensky trump york",
-    "tplf federal forces clash tigray afar airport seizure"
+    "tplf federal forces clash tigray afar airport seizure",
+    "china cracks down myanmar scam centres september 2026",
+    "ahmed sharaa syria general assembly diplomatic standing"
   ],
-  "updated_at": "2026-09-23T11:23:04.857547+00:00"
+  "updated_at": "2026-09-23T11:33:23.016586+00:00"
 }
