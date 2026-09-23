@@ -29,6 +29,7 @@ jobs:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       GEMINI_MODEL: "gemini-3.5-flash"
       GEMINI_FALLBACK_MODEL: "gemini-3.1-flash-lite"
+      DISABLE_GEMINI: "true"
       TELEGRAM_CHAT_ID: "@xtbtch"
       MAX_AGE_DAYS: "7"
       MAX_POSTS_PER_RUN: "2"
