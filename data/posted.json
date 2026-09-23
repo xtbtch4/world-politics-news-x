@@ -235,7 +235,9 @@
     "https://theguardian.com/us-news/2026/sep/23/trump-xi-jinping-china-us-state-visit",
     "https://npr.org/2026/09/23/nx-s1-5978852/heres-what-happened-on-day-2-of-the-un-general-assembly",
     "https://theguardian.com/australia-news/live/2026/sep/24/anthony-albanese-un-summit-labor-coalition-ukraine-ntwnfb",
-    "https://aljazeera.com/news/2026/9/23/gaza-flotilla-activist-on-hunger-strike-in-tunisia-jail-on-verge-of-death"
+    "https://aljazeera.com/news/2026/9/23/gaza-flotilla-activist-on-hunger-strike-in-tunisia-jail-on-verge-of-death",
+    "https://france24.com/en/trump-sparks-debate-over-diesel-export-ban",
+    "https://bbc.co.uk/news/articles/cm98626n260yo"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -475,7 +477,9 @@
     "cf648ebceb406766ce9d7770",
     "e2ec9f3a49cd3ee675ba1376",
     "c14d504c6585b7b92ce146f4",
-    "1ffa35913c2266fed4663b9d"
+    "1ffa35913c2266fed4663b9d",
+    "27e02c52f570698cd0748527",
+    "0430ec218fc19ef9f32fc109"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -671,7 +675,9 @@
     "trump jinping meets joint base andrews wednesday",
     "iran ukraine take center stage general assembly",
     "openai agent hacks medicare portal australia june",
-    "wael naouar hunger strike tunisia jail may 2024"
+    "wael naouar hunger strike tunisia jail may 2024",
+    "trump administration considers diesel export ban",
+    "harvey weinstein sentenced prison sexual assault york"
   ],
-  "updated_at": "2026-09-23T22:41:00.873477+00:00"
+  "updated_at": "2026-09-23T22:51:07.413256+00:00"
 }
