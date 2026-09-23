@@ -50,7 +50,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Collect and publish news
-        run: python bot.py
+        run: python runner.py
 
       - name: Save publication history
         run: |
