@@ -249,7 +249,9 @@
     "https://nytimes.com/2026/09/23/world/canada/carney-ai-risk.html",
     "https://politico.com/news/2026/09/23/us-chinese-visions-for-ai-regulation-differ-sharply-at-un-meeting-01090906",
     "https://aljazeera.com/video/newsfeed/2026/9/23/chinas-xi-arrives-to-trump-welcome-on-state-visit",
-    "https://nytimes.com/2026/09/23/us/politics/rfk-jr-book-advances-maha.html"
+    "https://nytimes.com/2026/09/23/us/politics/rfk-jr-book-advances-maha.html",
+    "https://aljazeera.com/news/2026/9/23/us-says-it-is-open-to-talks-with-cuba-if-it-changes-government",
+    "https://npr.org/2026/09/23/nx-s1-5978733/trump-xi-meeting-china"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -503,7 +505,9 @@
     "824164ccfbcc4452810957b1",
     "dee498d19f38c324088d3599",
     "d7c5e92df2a91b478fb80317",
-    "a3f3afac5eea3abec8549c1a"
+    "a3f3afac5eea3abec8549c1a",
+    "46b3bb8b30eff422c9beb10d",
+    "5af771a80250a16dc7f4b759"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -713,7 +717,9 @@
     "mark carney calls regulation canada",
     "trump opposes global security efforts",
     "jinping arrives state visit andrews joint base",
-    "rfk book advances hines consulting fees disclosure"
+    "rfk book advances hines consulting fees disclosure",
+    "rubio cuba talks york september",
+    "jinping donald trump meeting united states september"
   ],
-  "updated_at": "2026-09-23T23:41:07.162726+00:00"
+  "updated_at": "2026-09-23T23:51:09.307735+00:00"
 }
