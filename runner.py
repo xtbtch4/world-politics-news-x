@@ -10,32 +10,33 @@ import bot
 _original_make_post = bot.make_post
 
 
-def translate_to_russian(text: str) -> str:
+def split_text(text: str, limit: int) -> list[str]:
     text = bot.clean_text(text)
-    if not text or bot.has_cyrillic(text):
-        return text
-
-    translated_parts: list[str] = []
+    chunks: list[str] = []
     remaining = text
     while remaining:
-        if len(remaining) <= 1500:
-            chunk = remaining
-            remaining = ""
+        if len(remaining) <= limit:
+            chunks.append(remaining)
+            break
+        split_at = max(
+            remaining.rfind(". ", 0, limit),
+            remaining.rfind("! ", 0, limit),
+            remaining.rfind("? ", 0, limit),
+        )
+        if split_at < max(120, limit // 3):
+            split_at = remaining.rfind(" ", 0, limit)
+        if split_at < 1:
+            split_at = limit
         else:
-            split_at = max(
-                remaining.rfind(". ", 0, 1500),
-                remaining.rfind("! ", 0, 1500),
-                remaining.rfind("? ", 0, 1500),
-            )
-            if split_at < 500:
-                split_at = remaining.rfind(" ", 0, 1500)
-            if split_at < 1:
-                split_at = 1500
-            else:
-                split_at += 1
-            chunk = remaining[:split_at].strip()
-            remaining = remaining[split_at:].strip()
+            split_at += 1
+        chunks.append(remaining[:split_at].strip())
+        remaining = remaining[split_at:].strip()
+    return chunks
 
+
+def translate_google(text: str) -> str:
+    translated_parts: list[str] = []
+    for chunk in split_text(text, 1400):
         response = requests.get(
             "https://translate.googleapis.com/translate_a/single",
             params={
@@ -45,7 +46,7 @@ def translate_to_russian(text: str) -> str:
                 "dt": "t",
                 "q": chunk,
             },
-            timeout=20,
+            timeout=15,
         )
         response.raise_for_status()
         payload = response.json()
@@ -56,10 +57,56 @@ def translate_to_russian(text: str) -> str:
         )
         translated = bot.clean_text(translated)
         if not translated:
-            raise RuntimeError("translation service returned empty text")
+            raise RuntimeError("Google Translate returned empty text")
         translated_parts.append(translated)
-
     return bot.clean_text(" ".join(translated_parts))
+
+
+def translate_mymemory(text: str) -> str:
+    translated_parts: list[str] = []
+    for chunk in split_text(text, 420):
+        response = requests.get(
+            "https://api.mymemory.translated.net/get",
+            params={"q": chunk, "langpair": "en|ru"},
+            headers={"User-Agent": "WorldPoliticsNewsBot/1.0"},
+            timeout=15,
+        )
+        response.raise_for_status()
+        payload = response.json()
+        status = payload.get("responseStatus", 200)
+        if str(status) != "200":
+            raise RuntimeError(
+                f"MyMemory error {status}: {payload.get('responseDetails', '')}"
+            )
+        translated = bot.clean_text(
+            str((payload.get("responseData") or {}).get("translatedText") or "")
+        )
+        if not translated:
+            raise RuntimeError("MyMemory returned empty text")
+        translated_parts.append(translated)
+    return bot.clean_text(" ".join(translated_parts))
+
+
+def translate_to_russian(text: str) -> str:
+    text = bot.clean_text(text)
+    if not text or bot.has_cyrillic(text):
+        return text
+
+    errors: list[str] = []
+    for provider_name, provider in (
+        ("Google Translate", translate_google),
+        ("MyMemory", translate_mymemory),
+    ):
+        try:
+            translated = provider(text)
+            if translated and bot.has_cyrillic(translated):
+                bot.LOG.info("Fallback translation succeeded via %s", provider_name)
+                return translated
+            errors.append(f"{provider_name}: no Cyrillic output")
+        except (requests.RequestException, ValueError, TypeError, RuntimeError) as exc:
+            errors.append(f"{provider_name}: {str(exc).splitlines()[0]}")
+
+    raise RuntimeError("; ".join(errors))
 
 
 def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
@@ -68,8 +115,8 @@ def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
         return post
 
     # Gemini may be rate-limited or temporarily unavailable. In that case,
-    # translate the source material with a separate translation service instead
-    # of dropping the story. If translation also fails, publish the original.
+    # translate the source material with independent translation services instead
+    # of dropping the story. If all translators fail, publish the original.
     evidence, image_url, video_url = bot.fetch_article_context(story)
     source_summary = bot.clean_text(story.summary or evidence)
     if not source_summary:
@@ -85,7 +132,7 @@ def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
             title = translated_title
             summary = translated_summary
             translated = True
-    except (requests.RequestException, ValueError, TypeError, RuntimeError) as exc:
+    except (ValueError, TypeError, RuntimeError) as exc:
         bot.LOG.warning(
             "Fallback translation failed; publishing source language: %s (%s)",
             story.title,
@@ -103,7 +150,7 @@ def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
         )
     else:
         bot.LOG.warning(
-            "Gemini and fallback translator unavailable; publishing source-language fallback: %s",
+            "Gemini and fallback translators unavailable; publishing source-language fallback: %s",
             story.title,
         )
 
