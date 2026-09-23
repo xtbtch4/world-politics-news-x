@@ -192,7 +192,9 @@
     "https://nytimes.com/2026/09/22/us/politics/trump-arch-national-security.html",
     "https://nytimes.com/2026/09/23/business/covid-nursing-homes-trump.html",
     "https://theguardian.com/uk-news/2026/sep/23/argentina-president-attacks-un-over-inaction-on-falkland-islands-sovereignty",
-    "https://france24.com/en/live-news/20260923-zelensky-says-putin-using-fighters-from-47-countries-in-ukraine-war"
+    "https://france24.com/en/live-news/20260923-zelensky-says-putin-using-fighters-from-47-countries-in-ukraine-war",
+    "https://france24.com/en/americas/20260923-video-no-proof-plane-hit-twin-tower-9-11",
+    "https://nytimes.com/2026/09/23/us/politics/ai-us-china-trump-xi-economy.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -389,7 +391,9 @@
     "5fb0c0d8072f8109f884e6c3",
     "f432238f795e2ae57b65862a",
     "61c733587712643c11105413",
-    "e5e9c79e523cd0cf41d80c34"
+    "e5e9c79e523cd0cf41d80c34",
+    "4d46139900392d39f67007a5",
+    "0f0165fab56dc11c0315fd7c"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -542,7 +546,9 @@
     "trump cites national security press ban arch",
     "trump officials may undo nursing home mandates reporting covid",
     "javier milei general assembly falklands dispute september 2024",
-    "zelensky accuses russia using foreign fighters"
+    "zelensky accuses russia using foreign fighters",
+    "andrew bridgen south tower video claim september 2026",
+    "jinping trump washington development comparison"
   ],
-  "updated_at": "2026-09-23T19:10:31.935106+00:00"
+  "updated_at": "2026-09-23T19:11:33.093641+00:00"
 }
