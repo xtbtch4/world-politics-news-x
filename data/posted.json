@@ -241,7 +241,9 @@
     "https://nytimes.com/2026/09/23/us/ottawa-canada-renaming-trump-avenue.html",
     "https://aljazeera.com/economy/2026/9/23/the-white-house-press-pool-what-is-it-and-how-does-it-work",
     "https://politico.eu/article/tony-blair-tells-andy-burnham-ditch-your-brexit-red-lines-and-seek-to-rejoin-the-eu",
-    "https://aljazeera.com/news/2026/9/23/israels-ambassador-to-the-us-says-son-injured-in-west-bank-car-ramming"
+    "https://aljazeera.com/news/2026/9/23/israels-ambassador-to-the-us-says-son-injured-in-west-bank-car-ramming",
+    "https://nytimes.com/2026/09/23/us/politics/ai-leaders-united-nations-global-response.html",
+    "https://aljazeera.com/news/2026/9/23/us-lawmakers-seek-sanctions-for-israels-e1-west-bank-settlement-plan"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -487,7 +489,9 @@
     "187702d7aab3d4e1148cd9da",
     "76d12e2664747037ebe97806",
     "332f9aa03253ce9e642d0999",
-    "046317c7c3112cc67d067254"
+    "046317c7c3112cc67d067254",
+    "542aa302df9f1979b10db248",
+    "c9653fe86c5ce5d0a79348ae"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -689,7 +693,9 @@
     "ottawa city council renames trump avenue canada usa",
     "white house bans media outlets washington 2025",
     "tony blair urges return reformed london thursday",
-    "yechiel leiter son injured car ramming west bank"
+    "yechiel leiter son injured car ramming west bank",
+    "leaders warn security council global control",
+    "lawmakers seek sanctions israel west bank settlement plan"
   ],
-  "updated_at": "2026-09-23T23:05:33.284949+00:00"
+  "updated_at": "2026-09-23T23:11:15.054312+00:00"
 }
