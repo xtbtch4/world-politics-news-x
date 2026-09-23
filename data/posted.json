@@ -126,7 +126,9 @@
     "https://nytimes.com/2026/09/23/world/asia/unga-japan-takaichi-enemy-state.html",
     "https://nytimes.com/2026/09/23/us/politics/one-big-beautiful-bill-midterms-affordability.html",
     "https://france24.com/en/tv-shows/sports/20260923-football-full-squad-train-under-zin%C3%A9dine-zidane-as-tactical-changes-expected-for-france",
-    "https://nytimes.com/2026/09/23/world/americas/trump-mexico-trade-relations.html"
+    "https://nytimes.com/2026/09/23/world/americas/trump-mexico-trade-relations.html",
+    "https://dw.com/en/el-nino-explained-how-the-weather-pattern-affects-hurricanes-and-tropical-storms/a-79382511",
+    "https://theguardian.com/world/2026/sep/23/sri-lanka-easter-bombings-15-sentenced-prison-terror-attacks"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -257,7 +259,9 @@
     "b0d86426d222920cc48fac43",
     "4596ab8c471f40aaaa6d0308",
     "8ae5d089448d321e281a0d79",
-    "4ce1cb65aa878049abb823e2"
+    "4ce1cb65aa878049abb823e2",
+    "f61531bc61973a29ed4a5e06",
+    "98f1771c70a949cd23ec29db"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -344,7 +348,9 @@
     "sanae takaichi charter enemy state status japan",
     "trump tax cuts election impact controversy",
     "zinedine zidane trains full france squad",
-    "trump mexico partnership strengthening 2025"
+    "trump mexico partnership strengthening 2025",
+    "nino impacts 2026 atlantic hurricane season activity",
+    "sri lanka easter bombings sentences convicted 2024"
   ],
-  "updated_at": "2026-09-23T09:23:13.699942+00:00"
+  "updated_at": "2026-09-23T09:33:01.085517+00:00"
 }
