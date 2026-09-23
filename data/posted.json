@@ -227,7 +227,9 @@
     "https://nytimes.com/2026/09/23/world/americas/trump-venezuela-delcy-rodriguez.html",
     "https://france24.com/en/americas/20260923-ai-leaders-urge-caution-at-un-with-anthropic-chief-pledging-to-slow-down",
     "https://bbc.co.uk/news/articles/c6790yrgzq25o",
-    "https://nytimes.com/2026/09/23/us/politics/china-xi-health.html"
+    "https://nytimes.com/2026/09/23/us/politics/china-xi-health.html",
+    "https://theguardian.com/society/2026/sep/23/approach-to-high-blood-pressure-in-england-not-fit-for-purpose",
+    "https://theguardian.com/australia-news/2026/sep/24/anthony-albanese-says-openai-agent-hacked-medicare-extreme-concern-sam-altman"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -459,7 +461,9 @@
     "251202284b458ac9a57f985c",
     "bcabd99da1377292509812cb",
     "30251fd392608234d21f8c9c",
-    "f83ae9f09a5091104c361f28"
+    "f83ae9f09a5091104c361f28",
+    "598915043be0006dd31107da",
+    "9174c82a3de69b04df3ce87e"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -647,7 +651,9 @@
     "venezuelan leader address york",
     "leaders security council york september 2026",
     "federal judge delays ruling white house media ban",
-    "jinping health scrutiny china"
+    "jinping health scrutiny china",
+    "oxford study high blood pressure england 2025",
+    "anthony albanese openai medicare hack york september 2024"
   ],
-  "updated_at": "2026-09-23T22:01:47.035202+00:00"
+  "updated_at": "2026-09-23T22:11:07.158062+00:00"
 }
