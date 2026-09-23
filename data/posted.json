@@ -180,7 +180,9 @@
     "https://nytimes.com/2026/09/23/world/middleeast/stanislas-hutin-dead.html",
     "https://aljazeera.com/news/2026/9/23/trump-pushes-russia-ukraine-energy-truce-can-it-work",
     "https://theguardian.com/environment/2026/sep/23/britain-to-join-eu-global-ocean-monitoring-system-oceaneye",
-    "https://dw.com/en/slovakia-pm-robert-fico-s-nato-article-5-remarks-spark-criticism-and-raise-questions-about-his-country-s-nato-commitment/a-79387050"
+    "https://dw.com/en/slovakia-pm-robert-fico-s-nato-article-5-remarks-spark-criticism-and-raise-questions-about-his-country-s-nato-commitment/a-79387050",
+    "https://nytimes.com/2026/09/23/world/middleeast/iran-president-un-speech.html",
+    "https://aljazeera.com/news/2026/9/23/russian-drone-strikes-target-kyiv-infrastructure-after-zelenskyy-trump-talk"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -365,7 +367,9 @@
     "a8f18ac81e430e272120fb8a",
     "0e85a813727f9fb31e11523e",
     "2397a6cad473c33639f82a07",
-    "68fbf9672b53addcd12c90e9"
+    "68fbf9672b53addcd12c90e9",
+    "58fa25fe71d63cc690a2ce42",
+    "8ab96b0f178ad131076d4995"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -506,7 +510,9 @@
     "stanislas hutin death algerian war france",
     "trump zelensky discuss energy truce york",
     "join oceaneye science programme york",
-    "slovakia robert fico nato article remarks spark criticism raise questions about his country commitment"
+    "slovakia robert fico nato article remarks spark criticism raise questions about his country commitment",
+    "masoud pezeshkian speech nuclear program diplomacy 2024",
+    "russia attacks ukraine kill six zelenskyy trump talks"
   ],
-  "updated_at": "2026-09-23T18:04:41.984044+00:00"
+  "updated_at": "2026-09-23T18:12:40.940100+00:00"
 }
