@@ -7,6 +7,25 @@ import requests
 import bot
 
 
+# Keep Gemini failures visible in Actions logs so quota/model errors can be diagnosed.
+_original_requests_post = bot.requests.post
+
+
+def post_with_gemini_error_logging(*args, **kwargs):
+    response = _original_requests_post(*args, **kwargs)
+    url = str(args[0] if args else kwargs.get("url", ""))
+    if "generativelanguage.googleapis.com" in url and response.status_code not in {200, 201}:
+        body = bot.clean_text(response.text)
+        bot.LOG.warning(
+            "Gemini API response body (HTTP %s): %s",
+            response.status_code,
+            body[:3000] or "<empty body>",
+        )
+    return response
+
+
+bot.requests.post = post_with_gemini_error_logging
+
 _original_make_post = bot.make_post
 
 
