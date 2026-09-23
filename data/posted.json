@@ -212,7 +212,9 @@
     "https://news.un.org/feed/view/en/story/2026/09/1168387",
     "https://aljazeera.com/news/2026/9/23/as-major-powers-act-unilaterally-experts-say-un-faces-crisis-in-new-york",
     "https://nytimes.com/2026/09/23/world/un-general-assembly-walkout.html",
-    "https://aljazeera.com/video/newsfeed/2026/9/23/23-09-sv-israeli-solider-injured-leiter-il"
+    "https://aljazeera.com/video/newsfeed/2026/9/23/23-09-sv-israeli-solider-injured-leiter-il",
+    "https://nytimes.com/live/2026/09/23/world/un-general-assembly-iran-ukraine/irans-president-says-his-country-will-not-give-up-its-right-to-a-peaceful-nuclear-program",
+    "https://aljazeera.com/video/newsfeed/2026/9/23/ethiopia-warns-of-destruction-as-tigray-rebels-launch-offensive"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -429,7 +431,9 @@
     "a9cc6feb36c7c97f99193dac",
     "73ce0dbc8e4ba48ab4223601",
     "e3ff655ced8263c2265a5222",
-    "2cfbbd34f7f23fbda7d3bb74"
+    "2cfbbd34f7f23fbda7d3bb74",
+    "b8973f0a4d41d7f061eec6ad",
+    "f2b099832276ae3594192bb5"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -602,7 +606,9 @@
     "condemns houthi strike riyadh yemen escalation september",
     "major powers act unilaterally experts say faces crisis york",
     "walkouts general assembly are somewhat tradition",
-    "israeli soldier wounded car ramming west bank"
+    "israeli soldier wounded car ramming west bank",
+    "iran president nuclear program right statement",
+    "ethiopian president taye atske selassie warnstigray rebels offensive general assembly"
   ],
-  "updated_at": "2026-09-23T20:41:10.790963+00:00"
+  "updated_at": "2026-09-23T20:50:52.387818+00:00"
 }
