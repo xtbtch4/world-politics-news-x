@@ -1,1 +1,1 @@
-Validate semantic event deduplication 2026-09-22.
+Validate Gemini source-language fallback 2026-09-23.
