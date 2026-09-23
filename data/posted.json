@@ -245,7 +245,9 @@
     "https://nytimes.com/2026/09/23/us/politics/ai-leaders-united-nations-global-response.html",
     "https://aljazeera.com/news/2026/9/23/us-lawmakers-seek-sanctions-for-israels-e1-west-bank-settlement-plan",
     "https://theguardian.com/politics/2026/sep/24/tony-blair-britain-rejoin-eu-next-10-years-brexit",
-    "https://nytimes.com/2026/09/23/us/politics/des-moines-register-trump-lawsuit.html"
+    "https://nytimes.com/2026/09/23/us/politics/des-moines-register-trump-lawsuit.html",
+    "https://nytimes.com/2026/09/23/world/canada/carney-ai-risk.html",
+    "https://politico.com/news/2026/09/23/us-chinese-visions-for-ai-regulation-differ-sharply-at-un-meeting-01090906"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -495,7 +497,9 @@
     "542aa302df9f1979b10db248",
     "c9653fe86c5ce5d0a79348ae",
     "57bcff51c572dd72aa8b12a5",
-    "02141ab673f2ce3a6788fe8b"
+    "02141ab673f2ce3a6788fe8b",
+    "824164ccfbcc4452810957b1",
+    "dee498d19f38c324088d3599"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -701,7 +705,9 @@
     "leaders warn security council global control",
     "lawmakers seek sanctions israel west bank settlement plan",
     "tony blair urges britain rejoin decade",
-    "iowa judge dismisses trump lawsuit des moines register 2024"
+    "iowa judge dismisses trump lawsuit des moines register 2024",
+    "mark carney calls regulation canada",
+    "trump opposes global security efforts"
   ],
-  "updated_at": "2026-09-23T23:21:02.021490+00:00"
+  "updated_at": "2026-09-23T23:31:21.931208+00:00"
 }
