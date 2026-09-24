@@ -16,6 +16,21 @@ os.environ["GEMINI_MODEL"] = GEMINI_MODELS[0]
 os.environ["GEMINI_FALLBACK_MODEL"] = GEMINI_MODELS[1]
 os.environ["DISABLE_GEMINI"] = "false"
 
+# Capture configured keys once, before any per-request environment overrides.
+# This prevents GEMINI_API_KEY from being replaced by key #2/#3 and then
+# disappearing from the next story's rotation.
+_initial_key_values: list[str] = []
+for _name in ["GEMINI_API_KEY", *[f"GEMINI_API_KEY_{i}" for i in range(2, 11)]]:
+    _value = os.getenv(_name, "").strip()
+    if _value:
+        _initial_key_values.append(_value)
+_raw_initial_keys = os.getenv("GEMINI_API_KEYS", "").strip()
+if _raw_initial_keys:
+    _initial_key_values.extend(
+        value for value in re.split(r"[\s,;]+", _raw_initial_keys) if value
+    )
+_INITIAL_GEMINI_KEYS = list(dict.fromkeys(_initial_key_values))
+
 import bot
 
 
@@ -176,22 +191,9 @@ bot.requests.post = post_with_gemini_error_logging
 
 
 def gemini_api_keys() -> list[str]:
-    values: list[str] = []
-
-    # Existing key plus optional individually named keys.
-    for name in ["GEMINI_API_KEY", *[f"GEMINI_API_KEY_{i}" for i in range(2, 11)]]:
-        value = os.getenv(name, "").strip()
-        if value:
-            values.append(value)
-
-    # Optional scalable secret containing extra keys separated by newlines,
-    # commas, semicolons or spaces.
-    raw = os.getenv("GEMINI_API_KEYS", "").strip()
-    if raw:
-        values.extend(value for value in re.split(r"[\s,;]+", raw) if value)
-
-    # Deduplicate without exposing keys in logs.
-    return list(dict.fromkeys(values))
+    # Return the immutable startup snapshot. run_gemini_once temporarily changes
+    # GEMINI_API_KEY, so reading os.environ here would lose/reorder keys.
+    return list(_INITIAL_GEMINI_KEYS)
 
 
 def run_gemini_once(
@@ -201,6 +203,10 @@ def run_gemini_once(
     key_index: int,
     key_count: int,
 ) -> tuple[bot.RenderedPost | None, int | None, str]:
+    previous_key = os.getenv("GEMINI_API_KEY")
+    previous_model = os.getenv("GEMINI_MODEL")
+    previous_fallback = os.getenv("GEMINI_FALLBACK_MODEL")
+
     os.environ["GEMINI_API_KEY"] = api_key
     os.environ["GEMINI_MODEL"] = model
     os.environ["GEMINI_FALLBACK_MODEL"] = model
@@ -219,6 +225,18 @@ def run_gemini_once(
         post = _original_make_post(story)
     finally:
         bot.time.sleep = original_sleep
+        if previous_key is None:
+            os.environ.pop("GEMINI_API_KEY", None)
+        else:
+            os.environ["GEMINI_API_KEY"] = previous_key
+        if previous_model is None:
+            os.environ.pop("GEMINI_MODEL", None)
+        else:
+            os.environ["GEMINI_MODEL"] = previous_model
+        if previous_fallback is None:
+            os.environ.pop("GEMINI_FALLBACK_MODEL", None)
+        else:
+            os.environ["GEMINI_FALLBACK_MODEL"] = previous_fallback
 
     return post, _gemini_last_status, _gemini_last_body
 
@@ -274,19 +292,45 @@ def gemini_translation_with_rotation(story: bot.Story) -> bot.RenderedPost | Non
                     )
                 continue
 
-            # Capacity/server failures are normally model-wide, so do not burn
-            # the same request against every key. Move to the second allowed model.
-            if status in {500, 502, 503, 504} or status is None:
+            # A network timeout may be connection/project specific. Try the next
+            # configured key before abandoning this model.
+            if status is None:
+                if index < len(keys):
+                    bot.LOG.warning(
+                        "Gemini network failure on key %d/%d for %s; trying next key",
+                        index,
+                        len(keys),
+                        model,
+                    )
+                    continue
+                bot.LOG.warning(
+                    "All Gemini keys had network failures for %s; trying next model",
+                    model,
+                )
+                break
+
+            # Server/capacity failures are model-wide, so switching API keys does
+            # not normally help. Move to the alternate Gemini model.
+            if status in {500, 502, 503, 504}:
                 bot.LOG.warning(
                     "Gemini model %s temporarily unavailable; trying next allowed model",
                     model,
                 )
                 break
 
-            # HTTP 200 with unusable output or another non-quota error is not
-            # improved by changing keys; try the second allowed model instead.
+            # HTTP 200 with unusable output can vary by generation. Try the next
+            # key once before abandoning the model.
+            if index < len(keys):
+                bot.LOG.warning(
+                    "Gemini model %s returned unusable output/status %s on key %d/%d; trying next key",
+                    model,
+                    status,
+                    index,
+                    len(keys),
+                )
+                continue
             bot.LOG.warning(
-                "Gemini model %s returned unusable output/status %s; trying next allowed model",
+                "Gemini model %s returned unusable output/status %s on all keys; trying next model",
                 model,
                 status,
             )
@@ -395,15 +439,77 @@ SOURCE TEXT:
     )
 
 
+def google_translate_text(text: str) -> str | None:
+    text = bot.clean_text(text)
+    if not text:
+        return None
+    try:
+        response = requests.get(
+            "https://translate.googleapis.com/translate_a/single",
+            params={
+                "client": "gtx",
+                "sl": "auto",
+                "tl": "ru",
+                "dt": "t",
+                "q": text[:4500],
+            },
+            timeout=15,
+        )
+        response.raise_for_status()
+        payload = response.json()
+        translated = "".join(
+            part[0]
+            for part in (payload[0] or [])
+            if isinstance(part, list) and part and isinstance(part[0], str)
+        ).strip()
+        if translated and bot.has_cyrillic(translated):
+            return translated
+    except (requests.RequestException, ValueError, TypeError, IndexError) as exc:
+        bot.LOG.warning("Google Translate fallback error: %s", str(exc).splitlines()[0])
+    return None
+
+
+def free_translation_fallback(story: bot.Story) -> bot.RenderedPost | None:
+    evidence, image_url, video_url = bot.fetch_article_context(story)
+    source_summary = bot.clean_text(story.summary or evidence)
+    if not source_summary:
+        return None
+
+    title = google_translate_text(story.title)
+    summary = google_translate_text(source_summary[:2200])
+    if not title or not summary:
+        return None
+
+    event_key = bot.normalize_event_key(story.title)
+    if len(event_key.split()) < 3:
+        event_key = f"source-story-{story.fingerprint}"
+
+    bot.LOG.info("Free Russian translation fallback succeeded: %s", story.title)
+    return bot.RenderedPost(
+        title=title[:500].rstrip(),
+        summary=summary[:2200].rstrip(),
+        quote_line="",
+        source_line=f"Источник: {story.source}\n{story.url}",
+        event_key=event_key,
+        image_url=image_url or story.image_url,
+        video_url=video_url or story.video_url,
+    )
+
+
 def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
     post = gemini_translation_with_rotation(story)
     if post is not None:
         return post
 
-    # All Gemini model/key combinations failed: try OpenAI once, then original.
+    # All Gemini model/key combinations failed: try OpenAI, then a free machine
+    # translation endpoint before ever falling back to the source language.
     openai_post = openai_translation_fallback(story)
     if openai_post is not None:
         return openai_post
+
+    free_post = free_translation_fallback(story)
+    if free_post is not None:
+        return free_post
 
     evidence, image_url, video_url = bot.fetch_article_context(story)
     summary = bot.clean_text(story.summary or evidence)
@@ -415,7 +521,7 @@ def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
         event_key = f"source-story-{story.fingerprint}"
 
     bot.LOG.warning(
-        "Gemini rotation and OpenAI unavailable or unusable; publishing source language: %s",
+        "All translation paths unavailable or unusable; publishing source language: %s",
         story.title,
     )
 
