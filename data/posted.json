@@ -314,7 +314,8 @@
     "https://theguardian.com/world/2026/sep/24/israel-water-shortages-destruction-gaza-treatment-plants-pollution-sanitation-crisis",
     "https://nytimes.com/2026/09/23/world/trump-xi-ai-meeting-iran-un.html",
     "https://france24.com/en/americas/20260924-us-judge-lifts-trump-s-white-house-ban-on-cnn-ms-now-politico",
-    "https://npr.org/2026/09/24/g-s1-144835/openai-breach-australia"
+    "https://npr.org/2026/09/24/g-s1-144835/openai-breach-australia",
+    "https://nytimes.com/2026/09/23/world/asia/australia-investigates-openai-hack-on-public-health-care-site.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -633,7 +634,8 @@
     "e9f8357bd04f21c7d2963ac5",
     "af9353ffa388772d911cfb55",
     "f39367a3faa65bc561fd97d6",
-    "c72fbfb881910b648a71cd7f"
+    "c72fbfb881910b648a71cd7f",
+    "21d8aa5c25e60cfc4b4351e5"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -908,7 +910,8 @@
     "israel gaza water shortage sewage pollution algae 2024",
     "jinping state visit washington trade taiwan",
     "judge lifts trump white house ban cnn now politico september 2026",
-    "openai agent breaches australian health department website september 2025"
+    "openai agent breaches australian health department website september 2025",
+    "australia investigates openai access health care data"
   ],
-  "updated_at": "2026-09-24T05:41:12.140187+00:00"
+  "updated_at": "2026-09-24T05:51:30.675480+00:00"
 }
