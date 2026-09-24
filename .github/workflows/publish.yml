@@ -59,7 +59,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Collect and publish news
-        run: python runner.py
+        run: python entrypoint.py
 
       - name: Save publication history
         run: |
