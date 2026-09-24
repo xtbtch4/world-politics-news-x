@@ -9,7 +9,9 @@ import bot
 # Extra cross-source deduplication layer. Gemini can describe the same event
 # with very different EVENT_KEY wording, so we enrich the key with named
 # entities from the original RSS item and compare a small set of event families.
-_original_make_post = bot.make_post
+# Translation is intentionally Gemini-only: 3.5 Flash Lite first, then 3.1 Flash Lite.
+# If every configured Gemini key/model attempt fails, the story is skipped.
+_original_make_post = runner.gemini_translation_with_rotation
 _original_event_similarity = bot.event_similarity
 
 _ENTITY_STOPWORDS = {
