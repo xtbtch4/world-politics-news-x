@@ -255,7 +255,9 @@
     "https://bbc.co.uk/news/articles/cwp84rrrymd0o",
     "https://theguardian.com/politics/2026/sep/23/green-party-book-zack-polanski-eco-populism",
     "https://theguardian.com/commentisfree/2026/sep/23/britain-anti-racism-asian-youth-movements-1970s-far-right-violence",
-    "https://news.un.org/feed/view/en/story/2026/09/1168407"
+    "https://news.un.org/feed/view/en/story/2026/09/1168407",
+    "https://nytimes.com/2026/09/23/us/politics/trump-aides-iran-talks.html",
+    "https://euronews.com/2026/09/23/pezeshkian-tells-un-iran-will-not-be-bullied-but-will-negotiate"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -515,7 +517,9 @@
     "859a6ed8e922ec87ea1b867a",
     "24ff9476a1560b99a2015a47",
     "75953d401d440feb28f07b20",
-    "7dc6d4871382f62f4797e114"
+    "7dc6d4871382f62f4797e114",
+    "03ca808931a0432da5874cd8",
+    "e91555da95901ecde3a96288"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -731,7 +735,9 @@
     "azerbaijan pardons frenchman lifts sanctions russian billionaire",
     "russell warfield book release zack polanski green party",
     "far right violence britain anti racist movements rise",
-    "ebola outbreak drc report"
+    "ebola outbreak drc report",
+    "trump aides seek jump start diplomacy iran crisis widens",
+    "pezeshkian tells iran will not bullied but negotiate"
   ],
-  "updated_at": "2026-09-24T00:11:06.354506+00:00"
+  "updated_at": "2026-09-24T00:21:02.713102+00:00"
 }
