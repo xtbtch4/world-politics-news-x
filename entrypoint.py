@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import json
+import os
 import re
+import subprocess
 
 import runner
 import bot
@@ -180,6 +183,90 @@ def semantic_event_similarity(a: str, b: str) -> float:
 
 bot.make_post = make_post_with_entity_context
 bot.event_similarity = semantic_event_similarity
+
+
+# bot.main() already writes data/posted.json immediately after every successful
+# Telegram publication. Persist that exact checkpoint to GitHub immediately as
+# well, so a later workflow timeout cannot erase the fact that the URL was sent.
+_original_save_state = bot.save_state
+
+
+def _history_signature(state: dict) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    return (
+        tuple(state.get("posted_urls", [])),
+        tuple(state.get("posted_fingerprints", [])),
+        tuple(state.get("posted_event_keys", [])),
+    )
+
+
+def _saved_history_signature() -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    try:
+        saved = json.loads(bot.STATE_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return ((), (), ())
+    return _history_signature(saved)
+
+
+def save_state_with_checkpoint(state: dict) -> None:
+    before = _saved_history_signature()
+    _original_save_state(state)
+    after = _history_signature(state)
+
+    # DRY_RUN never publishes, and updated_at-only changes do not need an
+    # immediate checkpoint. The normal final workflow step can handle those.
+    if bot.DRY_RUN or before == after:
+        return
+    if os.getenv("GITHUB_ACTIONS", "").casefold() != "true":
+        return
+
+    try:
+        subprocess.run(
+            ["git", "config", "user.name", "github-actions[bot]"],
+            check=True,
+        )
+        subprocess.run(
+            [
+                "git",
+                "config",
+                "user.email",
+                "41898282+github-actions[bot]@users.noreply.github.com",
+            ],
+            check=True,
+        )
+        subprocess.run(["git", "add", str(bot.STATE_PATH)], check=True)
+        staged = subprocess.run(
+            ["git", "diff", "--cached", "--quiet", "--", str(bot.STATE_PATH)]
+        )
+        if staged.returncode == 0:
+            return
+        if staged.returncode != 1:
+            raise subprocess.CalledProcessError(staged.returncode, staged.args)
+
+        subprocess.run(
+            ["git", "commit", "-m", "Checkpoint publication history"],
+            check=True,
+        )
+        pushed = subprocess.run(
+            ["git", "push", "origin", "HEAD:main"],
+            text=True,
+            capture_output=True,
+        )
+        if pushed.returncode != 0:
+            bot.LOG.warning(
+                "Immediate history push failed; retrying after rebase: %s",
+                (pushed.stderr or pushed.stdout).strip()[:800],
+            )
+            subprocess.run(["git", "pull", "--rebase", "origin", "main"], check=True)
+            subprocess.run(["git", "push", "origin", "HEAD:main"], check=True)
+
+        bot.LOG.info("Publication history checkpoint pushed immediately")
+    except (OSError, subprocess.SubprocessError) as exc:
+        # Keep the news run alive; the workflow's final history step remains as
+        # a second persistence layer if an immediate checkpoint ever fails.
+        bot.LOG.error("Failed to checkpoint publication history immediately: %s", exc)
+
+
+bot.save_state = save_state_with_checkpoint
 
 
 if __name__ == "__main__":
