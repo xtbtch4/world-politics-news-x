@@ -1,1 +1,1 @@
-Test Gemini key rotation fix 2026-09-24 18:18 Europe/Kyiv.
+Test Gemini-only translation pipeline 2026-09-24 18:18 Europe/Kyiv.
