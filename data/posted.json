@@ -333,7 +333,9 @@
     "https://nytimes.com/2026/09/24/world/middleeast/netanyahu-unga-israel-election.html",
     "https://theguardian.com/politics/live/2026/sep/24/labour-reform-conservatives-yougov-mrp-poll-burnham-badenoch-farage-blair-brexit-latest-news-updates",
     "https://dw.com/en/germany-news-bundestag-to-discuss-opt-out-organ-donation/live-79406294",
-    "https://npr.org/2026/09/24/nx-s1-5978964/israels-prime-minister-to-give-an-address-at-the-u-n"
+    "https://npr.org/2026/09/24/nx-s1-5978964/israels-prime-minister-to-give-an-address-at-the-u-n",
+    "https://nytimes.com/2026/09/24/world/americas/brazil-supreme-court-justice-moraes-vorcaro-trump.html",
+    "https://nytimes.com/2026/09/24/us/politics/trump-xi-summit-china.html"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -671,7 +673,9 @@
     "31441a47444d8ad67e32572e",
     "801d3a6a71ba20c7f8f663c4",
     "db624499dcbff43f6669252f",
-    "0384d6902f016a40c6545309"
+    "0384d6902f016a40c6545309",
+    "b155d53cd47ddc23dea33e01",
+    "b5ca32d0e9e6a4fff19bee88"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -965,7 +969,9 @@
     "benjamin netanyahu general assembly election israel",
     "yougov poll labour parliament migrant crossings september",
     "bundestag discusses organ donation germany september 2026",
-    "israel prime minister address general assembly thursday"
+    "israel prime minister address general assembly thursday",
+    "corruption scandal embroils alexandre moraes brazil presidential election",
+    "jinping visits trump white house summit"
   ],
-  "updated_at": "2026-09-24T09:01:37.500843+00:00"
+  "updated_at": "2026-09-24T09:11:03.579608+00:00"
 }
