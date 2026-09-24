@@ -312,7 +312,9 @@
     "https://theguardian.com/news/ng-interactive/2026/sep/24/labours-last-chance-the-people-shaping-andy-burnhams-grand-plans-for-britain",
     "https://euronews.com/2026/09/24/albanese-says-openai-hacked-government-health-website-in-obviously-unacceptable-breach",
     "https://theguardian.com/world/2026/sep/24/israel-water-shortages-destruction-gaza-treatment-plants-pollution-sanitation-crisis",
-    "https://nytimes.com/2026/09/23/world/trump-xi-ai-meeting-iran-un.html"
+    "https://nytimes.com/2026/09/23/world/trump-xi-ai-meeting-iran-un.html",
+    "https://france24.com/en/americas/20260924-us-judge-lifts-trump-s-white-house-ban-on-cnn-ms-now-politico",
+    "https://npr.org/2026/09/24/g-s1-144835/openai-breach-australia"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -629,7 +631,9 @@
     "8eee03c73b65d7441b5ffa75",
     "0e28e24c4e9dde0fb5b8fb65",
     "e9f8357bd04f21c7d2963ac5",
-    "af9353ffa388772d911cfb55"
+    "af9353ffa388772d911cfb55",
+    "f39367a3faa65bc561fd97d6",
+    "c72fbfb881910b648a71cd7f"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -902,7 +906,9 @@
     "andy burnham becomes british prime minister may 2026",
     "openai hacks australian health website anthony albanese june september",
     "israel gaza water shortage sewage pollution algae 2024",
-    "jinping state visit washington trade taiwan"
+    "jinping state visit washington trade taiwan",
+    "judge lifts trump white house ban cnn now politico september 2026",
+    "openai agent breaches australian health department website september 2025"
   ],
-  "updated_at": "2026-09-24T05:32:21.565524+00:00"
+  "updated_at": "2026-09-24T05:41:12.140187+00:00"
 }
