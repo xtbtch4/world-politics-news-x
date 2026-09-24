@@ -1,29 +1,48 @@
 from __future__ import annotations
 
 import os
+import re
 import sys
 
 import requests
 
-# Use Gemini Flash Lite as the primary translator/rewriter.
-os.environ["GEMINI_MODEL"] = "gemini-3.5-flash-lite"
-os.environ["GEMINI_FALLBACK_MODEL"] = "gemini-3.5-flash-lite"
+GEMINI_MODELS = (
+    "gemini-3.5-flash-lite",
+    "gemini-3.1-flash-lite",
+)
+
+# Only these two Gemini models are allowed. 3.5 Flash Lite has priority.
+os.environ["GEMINI_MODEL"] = GEMINI_MODELS[0]
+os.environ["GEMINI_FALLBACK_MODEL"] = GEMINI_MODELS[1]
 os.environ["DISABLE_GEMINI"] = "false"
 
 import bot
 
 
-# Keep Gemini failures visible in Actions logs and allow only one real Gemini
-# request per story. bot.py may retry internally, but repeated attempts reuse the
-# first failure locally so they do not consume additional Gemini quota.
+# bot.py has its own retry loop. We allow only one real Gemini HTTP request per
+# model/key combination; internal retries reuse the same failure locally.
 _original_requests_post = bot.requests.post
+_original_make_post = bot.make_post
 _gemini_attempted = False
 _gemini_cached_response = None
 _gemini_cached_exception = None
+_gemini_last_status: int | None = None
+_gemini_last_body = ""
+
+
+def reset_gemini_attempt_state() -> None:
+    global _gemini_attempted, _gemini_cached_response, _gemini_cached_exception
+    global _gemini_last_status, _gemini_last_body
+    _gemini_attempted = False
+    _gemini_cached_response = None
+    _gemini_cached_exception = None
+    _gemini_last_status = None
+    _gemini_last_body = ""
 
 
 def post_with_gemini_error_logging(*args, **kwargs):
     global _gemini_attempted, _gemini_cached_response, _gemini_cached_exception
+    global _gemini_last_status, _gemini_last_body
 
     url = str(args[0] if args else kwargs.get("url", ""))
     is_gemini = "generativelanguage.googleapis.com" in url
@@ -42,17 +61,21 @@ def post_with_gemini_error_logging(*args, **kwargs):
     except requests.RequestException as exc:
         if is_gemini:
             _gemini_cached_exception = exc
+            _gemini_last_status = None
+            _gemini_last_body = str(exc)
         raise
 
     if is_gemini:
+        _gemini_last_status = response.status_code
+        _gemini_last_body = bot.clean_text(response.text)
         if response.status_code not in {200, 201}:
-            body = bot.clean_text(response.text)
             bot.LOG.warning(
                 "Gemini API response body (HTTP %s): %s",
                 response.status_code,
-                body[:3000] or "<empty body>",
+                _gemini_last_body[:3000] or "<empty body>",
             )
-        if response.status_code in {429, 500, 502, 503, 504}:
+            # Cache every failed response so bot.py cannot spend more quota on
+            # its internal retries for the same key/model combination.
             _gemini_cached_response = response
 
     return response
@@ -60,7 +83,125 @@ def post_with_gemini_error_logging(*args, **kwargs):
 
 bot.requests.post = post_with_gemini_error_logging
 
-_original_make_post = bot.make_post
+
+def gemini_api_keys() -> list[str]:
+    values: list[str] = []
+
+    # Existing key plus optional individually named keys.
+    for name in ["GEMINI_API_KEY", *[f"GEMINI_API_KEY_{i}" for i in range(2, 11)]]:
+        value = os.getenv(name, "").strip()
+        if value:
+            values.append(value)
+
+    # Optional scalable secret containing extra keys separated by newlines,
+    # commas, semicolons or spaces.
+    raw = os.getenv("GEMINI_API_KEYS", "").strip()
+    if raw:
+        values.extend(value for value in re.split(r"[\s,;]+", raw) if value)
+
+    # Deduplicate without exposing keys in logs.
+    return list(dict.fromkeys(values))
+
+
+def run_gemini_once(
+    story: bot.Story,
+    api_key: str,
+    model: str,
+    key_index: int,
+    key_count: int,
+) -> tuple[bot.RenderedPost | None, int | None, str]:
+    os.environ["GEMINI_API_KEY"] = api_key
+    os.environ["GEMINI_MODEL"] = model
+    os.environ["GEMINI_FALLBACK_MODEL"] = model
+    reset_gemini_attempt_state()
+
+    bot.LOG.info(
+        "Gemini attempt: model=%s key=%d/%d",
+        model,
+        key_index,
+        key_count,
+    )
+
+    original_sleep = bot.time.sleep
+    bot.time.sleep = lambda _seconds: None
+    try:
+        post = _original_make_post(story)
+    finally:
+        bot.time.sleep = original_sleep
+
+    return post, _gemini_last_status, _gemini_last_body
+
+
+def gemini_translation_with_rotation(story: bot.Story) -> bot.RenderedPost | None:
+    keys = gemini_api_keys()
+    if not keys:
+        bot.LOG.warning("No Gemini API keys are configured")
+        return None
+
+    bot.LOG.info(
+        "Gemini rotation configured with %d key(s); model priority: %s -> %s",
+        len(keys),
+        GEMINI_MODELS[0],
+        GEMINI_MODELS[1],
+    )
+
+    for model in GEMINI_MODELS:
+        for index, api_key in enumerate(keys, start=1):
+            post, status, body = run_gemini_once(
+                story,
+                api_key,
+                model,
+                index,
+                len(keys),
+            )
+            if post is not None:
+                bot.LOG.info(
+                    "Gemini succeeded: model=%s key=%d/%d",
+                    model,
+                    index,
+                    len(keys),
+                )
+                return post
+
+            body_lower = (body or "").lower()
+            key_or_quota_problem = (
+                status in {401, 403, 429}
+                or "resource_exhausted" in body_lower
+                or "quota" in body_lower
+                or "rate limit" in body_lower
+                or "api_key_invalid" in body_lower
+                or "invalid api key" in body_lower
+            )
+
+            if key_or_quota_problem:
+                if index < len(keys):
+                    bot.LOG.warning(
+                        "Gemini key %d/%d exhausted or unavailable for %s; switching to next key",
+                        index,
+                        len(keys),
+                        model,
+                    )
+                continue
+
+            # Capacity/server failures are normally model-wide, so do not burn
+            # the same request against every key. Move to the second allowed model.
+            if status in {500, 502, 503, 504} or status is None:
+                bot.LOG.warning(
+                    "Gemini model %s temporarily unavailable; trying next allowed model",
+                    model,
+                )
+                break
+
+            # HTTP 200 with unusable output or another non-quota error is not
+            # improved by changing keys; try the second allowed model instead.
+            bot.LOG.warning(
+                "Gemini model %s returned unusable output/status %s; trying next allowed model",
+                model,
+                status,
+            )
+            break
+
+    return None
 
 
 def openai_output_text(payload: dict) -> str:
@@ -164,25 +305,11 @@ SOURCE TEXT:
 
 
 def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
-    global _gemini_attempted, _gemini_cached_response, _gemini_cached_exception
-
-    _gemini_attempted = False
-    _gemini_cached_response = None
-    _gemini_cached_exception = None
-    original_sleep = bot.time.sleep
-    bot.time.sleep = lambda _seconds: None
-    try:
-        post = _original_make_post(story)
-    finally:
-        bot.time.sleep = original_sleep
-        _gemini_attempted = False
-        _gemini_cached_response = None
-        _gemini_cached_exception = None
-
+    post = gemini_translation_with_rotation(story)
     if post is not None:
         return post
 
-    # Gemini failed: try OpenAI once before falling back to the source language.
+    # All Gemini model/key combinations failed: try OpenAI once, then original.
     openai_post = openai_translation_fallback(story)
     if openai_post is not None:
         return openai_post
@@ -197,7 +324,7 @@ def make_post_with_source_fallback(story: bot.Story) -> bot.RenderedPost:
         event_key = f"source-story-{story.fingerprint}"
 
     bot.LOG.warning(
-        "Gemini and OpenAI unavailable or unusable; publishing source language: %s",
+        "Gemini rotation and OpenAI unavailable or unusable; publishing source language: %s",
         story.title,
     )
 
