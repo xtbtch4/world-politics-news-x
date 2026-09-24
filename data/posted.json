@@ -261,7 +261,9 @@
     "https://nytimes.com/2026/09/23/us/politics/uss-lincoln-attempted-suicides.html",
     "https://aljazeera.com/news/liveblog/2026/9/24/iran-war-live-tehran-says-it-wont-be-bullied-remains-open-for-talks",
     "https://politico.com/news/2026/09/23/u-s-china-trade-truce-extended-two-months-01091121",
-    "https://politico.com/news/2026/09/23/openai-australia-government-breach-01091069"
+    "https://politico.com/news/2026/09/23/openai-australia-government-breach-01091069",
+    "https://nytimes.com/2026/09/23/us/politics/timothy-mellon-republicans-midterms.html",
+    "https://theguardian.com/world/2026/sep/23/how-the-poisonous-tide-of-disinformation-stokes-division-and-sows-despair"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -527,7 +529,9 @@
     "e68ce48df35025e168a9f219",
     "a18b9ebcf21a4a1d0db69c0d",
     "623a8e14213d09dd44c6b253",
-    "6be3daf4d72cecd1d0aef4a0"
+    "6be3daf4d72cecd1d0aef4a0",
+    "4ebe35d2be6a7947d3af891b",
+    "0eca81d56b6df4330d23c238"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -749,7 +753,9 @@
     "eight sailors suicide attempts uss lincoln navy",
     "iran war live tehran says won bullied remains open talks",
     "bessent says china trade truce extended months",
-    "openai model breaches australian government websites"
+    "openai model breaches australian government websites",
+    "timothy mellon billionaire pulls back his money senate republicans",
+    "how poisonous tide disinformation spreads division despair"
   ],
-  "updated_at": "2026-09-24T00:41:08.455249+00:00"
+  "updated_at": "2026-09-24T00:50:57.891463+00:00"
 }
