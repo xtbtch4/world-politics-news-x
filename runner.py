@@ -19,6 +19,97 @@ os.environ["DISABLE_GEMINI"] = "false"
 import bot
 
 
+# Canonicalize common headline wording so the same event reported by different
+# outlets is deduplicated even when wording or demonyms differ.
+_EVENT_TOKEN_ALIASES = {
+    "australian": "australia",
+    "australians": "australia",
+    "ukrainian": "ukraine",
+    "ukrainians": "ukraine",
+    "russian": "russia",
+    "russians": "russia",
+    "iranian": "iran",
+    "iranians": "iran",
+    "israeli": "israel",
+    "israelis": "israel",
+    "palestinian": "palestine",
+    "palestinians": "palestine",
+    "american": "usa",
+    "americans": "usa",
+    "british": "uk",
+    "german": "germany",
+    "germans": "germany",
+    "french": "france",
+    "chinese": "china",
+    "canadian": "canada",
+    "canadians": "canada",
+    "european": "europe",
+    "hacked": "hack",
+    "hacks": "hack",
+    "hacking": "hack",
+    "hackers": "hack",
+    "breach": "hack",
+    "breached": "hack",
+    "breaches": "hack",
+    "website": "website",
+    "websites": "website",
+    "site": "website",
+    "sites": "website",
+    "governmental": "government",
+    "attacked": "attack",
+    "attacks": "attack",
+    "strikes": "strike",
+    "struck": "strike",
+    "sanctions": "sanction",
+    "sanctioned": "sanction",
+    "elections": "election",
+    "tariffs": "tariff",
+}
+
+_EVENT_NOISE_TOKENS = set(getattr(bot, "EVENT_KEY_STOPWORDS", set())) | {
+    "says", "said", "tells", "told", "calls", "called", "calling",
+    "warns", "warned", "urges", "urged", "remarks", "remark",
+    "criticises", "criticise", "criticizes", "criticized", "slams",
+    "expresses", "expressed", "concern", "concerns", "amid",
+}
+
+
+def _canonical_event_tokens(value: str) -> list[str]:
+    result: list[str] = []
+    for raw in re.findall(r"[a-z0-9]{3,}", (value or "").casefold()):
+        token = _EVENT_TOKEN_ALIASES.get(raw, raw)
+        if token in _EVENT_NOISE_TOKENS:
+            continue
+        if token not in result:
+            result.append(token)
+    return result
+
+
+def stronger_normalize_event_key(value: str) -> str:
+    return " ".join(_canonical_event_tokens(value))[:240]
+
+
+def stronger_event_similarity(a: str, b: str) -> float:
+    tokens_a = set(_canonical_event_tokens(a))
+    tokens_b = set(_canonical_event_tokens(b))
+    if not tokens_a or not tokens_b:
+        return 0.0
+
+    common = tokens_a & tokens_b
+    score = len(common) / min(len(tokens_a), len(tokens_b))
+
+    # Cross-source headlines often add a person's name or a reaction phrase.
+    # Four matching canonical event tokens are strong evidence of the same
+    # underlying event, while still requiring substantial factual overlap.
+    if len(common) >= 4:
+        score = max(score, 0.65)
+    return score
+
+
+bot.normalize_event_key = stronger_normalize_event_key
+bot.event_similarity = stronger_event_similarity
+
+
 # bot.py has its own retry loop. We allow only one real Gemini HTTP request per
 # model/key combination; internal retries reuse the same failure locally.
 _original_requests_post = bot.requests.post
