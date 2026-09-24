@@ -315,7 +315,9 @@
     "https://nytimes.com/2026/09/23/world/trump-xi-ai-meeting-iran-un.html",
     "https://france24.com/en/americas/20260924-us-judge-lifts-trump-s-white-house-ban-on-cnn-ms-now-politico",
     "https://npr.org/2026/09/24/g-s1-144835/openai-breach-australia",
-    "https://nytimes.com/2026/09/23/world/asia/australia-investigates-openai-hack-on-public-health-care-site.html"
+    "https://nytimes.com/2026/09/23/world/asia/australia-investigates-openai-hack-on-public-health-care-site.html",
+    "https://france24.com/en/europe/20260924-as-moscow-steps-up-attacks-kyiv-residents-brace-for-harsh-winter",
+    "https://theguardian.com/environment/2026/sep/24/cash-to-trash-levy-house-developers-too-low-offset-nature-damage"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -635,7 +637,9 @@
     "af9353ffa388772d911cfb55",
     "f39367a3faa65bc561fd97d6",
     "c72fbfb881910b648a71cd7f",
-    "21d8aa5c25e60cfc4b4351e5"
+    "21d8aa5c25e60cfc4b4351e5",
+    "056b75552d9f6bce33bb4751",
+    "bb937f762ce364bc2bc132fc"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -911,7 +915,9 @@
     "jinping state visit washington trade taiwan",
     "judge lifts trump white house ban cnn now politico september 2026",
     "openai agent breaches australian health department website september 2025",
-    "australia investigates openai access health care data"
+    "australia investigates openai access health care data",
+    "russia missile strike kyiv september 2026",
+    "norfolk broads housing levy environmental criticism 2024"
   ],
-  "updated_at": "2026-09-24T06:04:23.275318+00:00"
+  "updated_at": "2026-09-24T06:11:01.670453+00:00"
 }
