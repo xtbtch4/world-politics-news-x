@@ -367,7 +367,9 @@
     "https://nytimes.com/2026/09/24/us/politics/trump-third-country-deportations.html",
     "https://theguardian.com/world/2026/sep/24/uk-homes-for-ukraine-funding-cut-homeless",
     "https://politico.eu/article/totalenergies-refused-support-deadly-mozambique-attack-inquest-hears",
-    "https://france24.com/en/trump-views-us-china-relations-as-a-personal-friendship-xi-views-us-as-an-adversary-to-be-managed"
+    "https://france24.com/en/trump-views-us-china-relations-as-a-personal-friendship-xi-views-us-as-an-adversary-to-be-managed",
+    "https://nytimes.com/2026/09/24/world/middleeast/saudi-arabia-houthi-missile-attack-yemen-war.html",
+    "https://aljazeera.com/video/newsfeed/2026/9/24/four-civilians-killed-in-pakistani-airstrikes-in-afghanistan"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -739,7 +741,9 @@
     "efdf278ba3ddf9118252b36d",
     "39dcf61e92f2bb243ad6a91f",
     "5da9a4332f0385f62197e901",
-    "e01cbd062375fe13ae8d3ac3"
+    "e01cbd062375fe13ae8d3ac3",
+    "64ba084e24d6204bcac51efb",
+    "851f592f4b87d582446ca1e5"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -1067,7 +1071,9 @@
     "trump administration scrambles stop third country deportations court ruling united states",
     "ukraine refugees funding cut homes scheme september 2024 russia continue",
     "totalenergies mozambique palma attack inquest 2021 sworn france mozambican",
-    "trump relations china approach washington erin ogunkeye henrietta levin senior fellow freeman chair studies center strategic"
+    "trump relations china approach washington erin ogunkeye henrietta levin senior fellow freeman chair studies center strategic",
+    "saudi arabia intercepts houthi missiles cities downs targeting kingdom iran backed yemen",
+    "four civilians killed pakistani airstrikes afghanistan wednesday"
   ],
-  "updated_at": "2026-09-24T17:12:16.262438+00:00"
+  "updated_at": "2026-09-24T17:20:28.366811+00:00"
 }
