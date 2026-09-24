@@ -1,1 +1,1 @@
-Test restored translation fallback chain 2026-09-24 18:32 Europe/Kyiv.
+Test immediate publication checkpoint 2026-09-24 21:05 Europe/Kyiv.
