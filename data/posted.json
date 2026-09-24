@@ -259,7 +259,9 @@
     "https://nytimes.com/2026/09/23/us/politics/trump-aides-iran-talks.html",
     "https://euronews.com/2026/09/23/pezeshkian-tells-un-iran-will-not-be-bullied-but-will-negotiate",
     "https://nytimes.com/2026/09/23/us/politics/uss-lincoln-attempted-suicides.html",
-    "https://aljazeera.com/news/liveblog/2026/9/24/iran-war-live-tehran-says-it-wont-be-bullied-remains-open-for-talks"
+    "https://aljazeera.com/news/liveblog/2026/9/24/iran-war-live-tehran-says-it-wont-be-bullied-remains-open-for-talks",
+    "https://politico.com/news/2026/09/23/u-s-china-trade-truce-extended-two-months-01091121",
+    "https://politico.com/news/2026/09/23/openai-australia-government-breach-01091069"
   ],
   "posted_fingerprints": [
     "bedd9cff5e37f9481be8e694",
@@ -523,7 +525,9 @@
     "03ca808931a0432da5874cd8",
     "e91555da95901ecde3a96288",
     "e68ce48df35025e168a9f219",
-    "a18b9ebcf21a4a1d0db69c0d"
+    "a18b9ebcf21a4a1d0db69c0d",
+    "623a8e14213d09dd44c6b253",
+    "6be3daf4d72cecd1d0aef4a0"
   ],
   "posted_event_keys": [
     "donald trump andy burnham first meeting un general assembly new york",
@@ -743,7 +747,9 @@
     "trump aides seek jump start diplomacy iran crisis widens",
     "pezeshkian tells iran will not bullied but negotiate",
     "eight sailors suicide attempts uss lincoln navy",
-    "iran war live tehran says won bullied remains open talks"
+    "iran war live tehran says won bullied remains open talks",
+    "bessent says china trade truce extended months",
+    "openai model breaches australian government websites"
   ],
-  "updated_at": "2026-09-24T00:31:15.770823+00:00"
+  "updated_at": "2026-09-24T00:41:08.455249+00:00"
 }
