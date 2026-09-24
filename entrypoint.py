@@ -6,12 +6,72 @@ import runner
 import bot
 
 
+# Translation order is strict:
+# 1) gemini-3.5-flash-lite across every configured Gemini key
+# 2) gemini-3.1-flash-lite across every configured Gemini key
+# 3) OpenAI
+# 4) free translator
+# 5) source language only if every translation path fails
+#
+# runner.py already implements OpenAI/free/source fallbacks. This wrapper makes
+# Gemini exhaust every available key for each allowed model before moving on.
+def gemini_all_keys_rotation(story: bot.Story) -> bot.RenderedPost | None:
+    keys = runner.gemini_api_keys()
+    if not keys:
+        bot.LOG.warning("No Gemini API keys are configured")
+        return None
+
+    bot.LOG.info(
+        "Gemini strict rotation configured with %d key(s); model priority: %s -> %s",
+        len(keys),
+        runner.GEMINI_MODELS[0],
+        runner.GEMINI_MODELS[1],
+    )
+
+    for model in runner.GEMINI_MODELS:
+        for index, api_key in enumerate(keys, start=1):
+            post, status, body = runner.run_gemini_once(
+                story,
+                api_key,
+                model,
+                index,
+                len(keys),
+            )
+            if post is not None:
+                bot.LOG.info(
+                    "Gemini succeeded: model=%s key=%d/%d",
+                    model,
+                    index,
+                    len(keys),
+                )
+                return post
+
+            bot.LOG.warning(
+                "Gemini attempt failed: model=%s key=%d/%d status=%s; trying next key/model",
+                model,
+                index,
+                len(keys),
+                status,
+            )
+
+        bot.LOG.warning(
+            "All %d Gemini key(s) failed for %s; moving to next allowed model/fallback",
+            len(keys),
+            model,
+        )
+
+    return None
+
+
+# runner.make_post_with_source_fallback resolves this function dynamically, so
+# replace the Gemini stage with the strict all-keys implementation above.
+runner.gemini_translation_with_rotation = gemini_all_keys_rotation
+
+
 # Extra cross-source deduplication layer. Gemini can describe the same event
 # with very different EVENT_KEY wording, so we enrich the key with named
 # entities from the original RSS item and compare a small set of event families.
-# Translation is intentionally Gemini-only: 3.5 Flash Lite first, then 3.1 Flash Lite.
-# If every configured Gemini key/model attempt fails, the story is skipped.
-_original_make_post = runner.gemini_translation_with_rotation
+_original_make_post = runner.make_post_with_source_fallback
 _original_event_similarity = bot.event_similarity
 
 _ENTITY_STOPWORDS = {
