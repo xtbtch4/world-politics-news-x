@@ -12,6 +12,10 @@ _ALLOWED_MODELS = {
 }
 _MAX_REAL_REQUESTS_PER_MODEL_PER_RUN = 1
 _KEY_NAMES = ["GEMINI_API_KEY", *[f"GEMINI_API_KEY_{i}" for i in range(2, 11)]]
+# Temporarily disabled because Google returns 401 ACCOUNT_STATE_INVALID
+# (bound service account/account is deleted or disabled). Keep the GitHub Secret
+# untouched so it can be re-enabled after the Google account is restored.
+_DISABLED_KEY_NAMES = {"GEMINI_API_KEY_3"}
 _real_calls: dict[str, int] = {}
 _original_post = requests.post
 
@@ -21,6 +25,12 @@ def _run_number() -> int:
         return int(os.getenv("GITHUB_RUN_NUMBER", "0") or 0)
     except ValueError:
         return 0
+
+
+def _disable_blocked_keys() -> None:
+    for name in sorted(_DISABLED_KEY_NAMES):
+        if os.environ.pop(name, None):
+            print(f"Gemini quota guard: temporarily disabled {name}")
 
 
 def _rotate_configured_keys() -> None:
@@ -88,6 +98,7 @@ def guarded_post(*args, **kwargs):
     return _original_post(*args, **kwargs)
 
 
+_disable_blocked_keys()
 _rotate_configured_keys()
 requests.post = guarded_post
 print(
