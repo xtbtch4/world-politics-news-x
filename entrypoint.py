@@ -73,7 +73,7 @@ runner.gemini_translation_with_rotation = gemini_all_keys_rotation
 
 # Extra cross-source deduplication layer. Gemini can describe the same event
 # with very different EVENT_KEY wording, so we enrich the key with named
-# entities from the original RSS item and compare a small set of event families.
+# entities from the original RSS item and normalize common event word variants.
 _original_make_post = runner.make_post_with_source_fallback
 _original_event_similarity = bot.event_similarity
 
@@ -91,6 +91,31 @@ _SPEECH_WORDS = {
     "delivered", "delivering",
 }
 
+# These aliases deliberately cover wording changes that commonly made the same
+# disaster story look different across outlets (for example France 24 vs BBC).
+_EVENT_SEMANTIC_ALIASES = {
+    "flooding": "flood",
+    "floods": "flood",
+    "flooded": "flood",
+    "downpour": "rain",
+    "downpours": "rain",
+    "rainfall": "rain",
+    "rains": "rain",
+    "raining": "rain",
+    "declares": "declare",
+    "declared": "declare",
+    "declaration": "declare",
+    "emergency": "disaster",
+    "thai": "thailand",
+}
+
+
+def _semantic_tokens(value: str) -> set[str]:
+    tokens: set[str] = set()
+    for token in runner._canonical_event_tokens(value):
+        tokens.add(_EVENT_SEMANTIC_ALIASES.get(token, token))
+    return tokens
+
 
 def _source_entity_tokens(story: bot.Story) -> list[str]:
     text = f"{story.title} {story.summary[:1200]}"
@@ -99,6 +124,7 @@ def _source_entity_tokens(story: bot.Story) -> list[str]:
     for raw in re.findall(r"\b[A-Z][A-Za-z'’-]{2,}\b", text):
         token = raw.casefold().replace("’", "'")
         token = runner._EVENT_TOKEN_ALIASES.get(token, token)
+        token = _EVENT_SEMANTIC_ALIASES.get(token, token)
         if token in _ENTITY_STOPWORDS or token in runner._EVENT_NOISE_TOKENS:
             continue
         if token not in result:
@@ -153,9 +179,17 @@ def semantic_event_similarity(a: str, b: str) -> float:
     if score >= 0.60:
         return score
 
-    tokens_a = set(runner._canonical_event_tokens(a))
-    tokens_b = set(runner._canonical_event_tokens(b))
+    tokens_a = _semantic_tokens(a)
+    tokens_b = _semantic_tokens(b)
     if not tokens_a or not tokens_b:
+        return score
+
+    # Recalculate after semantic normalization. This closes cases such as
+    # flooding/flood, declared/declaration and downpour/rainfall without using a
+    # broad city-wide rule that might suppress a genuinely new event later.
+    normalized_score = len(tokens_a & tokens_b) / min(len(tokens_a), len(tokens_b))
+    score = max(score, normalized_score)
+    if score >= 0.60:
         return score
 
     families = _event_families(tokens_a) & _event_families(tokens_b)
@@ -185,9 +219,64 @@ bot.make_post = make_post_with_entity_context
 bot.event_similarity = semantic_event_similarity
 
 
-# bot.main() already writes data/posted.json immediately after every successful
-# Telegram publication. Persist that exact checkpoint to GitHub immediately as
-# well, so a later workflow timeout cannot erase the fact that the URL was sent.
+# A queued GitHub Actions run can carry an older event SHA. actions/checkout may
+# therefore give it an older data/posted.json even though the previous serialized
+# run already published and pushed newer history. Fetch only the latest history
+# from remote main before bot.main(), without replacing the code checkout.
+def refresh_history_from_remote_main() -> None:
+    if os.getenv("GITHUB_ACTIONS", "").casefold() != "true":
+        return
+
+    live_ref = "refs/remotes/origin/live-main-history"
+    try:
+        subprocess.run(
+            ["git", "fetch", "origin", f"main:{live_ref}"],
+            check=True,
+            text=True,
+            capture_output=True,
+            timeout=45,
+        )
+        shown = subprocess.run(
+            ["git", "show", f"{live_ref}:data/posted.json"],
+            check=True,
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        remote = json.loads(shown.stdout)
+        try:
+            local = json.loads(bot.STATE_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            local = {}
+
+        def merged_values(key: str) -> list[str]:
+            return list(dict.fromkeys(remote.get(key, []) + local.get(key, [])))[-2000:]
+
+        merged = {
+            "posted_urls": merged_values("posted_urls"),
+            "posted_fingerprints": merged_values("posted_fingerprints"),
+            "posted_event_keys": merged_values("posted_event_keys"),
+            "updated_at": remote.get("updated_at") or local.get("updated_at"),
+        }
+        bot.STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        bot.STATE_PATH.write_text(
+            json.dumps(merged, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        bot.LOG.info(
+            "Refreshed publication history from latest main: %d urls, %d event keys",
+            len(merged["posted_urls"]),
+            len(merged["posted_event_keys"]),
+        )
+    except (OSError, json.JSONDecodeError, subprocess.SubprocessError) as exc:
+        # Do not block the news run if GitHub briefly fails; normal local history
+        # is still safer than publishing nothing at all.
+        bot.LOG.warning("Could not refresh latest remote publication history: %s", exc)
+
+
+# bot.main() writes data/posted.json immediately after every successful Telegram
+# publication. Persist that exact checkpoint to GitHub immediately as well, so a
+# later workflow timeout cannot erase the fact that the URL was sent.
 _original_save_state = bot.save_state
 
 
@@ -270,4 +359,5 @@ bot.save_state = save_state_with_checkpoint
 
 
 if __name__ == "__main__":
+    refresh_history_from_remote_main()
     raise SystemExit(bot.main())
