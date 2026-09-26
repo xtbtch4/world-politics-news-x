@@ -10,13 +10,16 @@ _ALLOWED_MODELS = {
     "gemini-3.5-flash-lite",
     "gemini-3.1-flash-lite",
 }
-_MAX_REAL_REQUESTS_PER_MODEL_PER_RUN = 1
+# Safety cap is per Google project/key AND per model, not global per model.
+# With a 10-minute workflow cadence this is at most 144 requests/day to any
+# single key for each Lite model, comfortably below a 500 RPD model limit.
+_MAX_REAL_REQUESTS_PER_KEY_MODEL_PER_RUN = 1
 _KEY_NAMES = ["GEMINI_API_KEY", *[f"GEMINI_API_KEY_{i}" for i in range(2, 11)]]
 # Temporarily disabled because Google returns 401 ACCOUNT_STATE_INVALID
 # (bound service account/account is deleted or disabled). Keep the GitHub Secret
 # untouched so it can be re-enabled after the Google account is restored.
 _DISABLED_KEY_NAMES = {"GEMINI_API_KEY_3"}
-_real_calls: dict[str, int] = {}
+_real_calls: dict[tuple[str, str], int] = {}
 _original_post = requests.post
 
 
@@ -70,13 +73,36 @@ def _blocked_response(url: str, model: str, reason: str) -> requests.Response:
     return response
 
 
+def _request_api_key(kwargs: dict) -> str:
+    headers = kwargs.get("headers") or {}
+    for name, value in headers.items():
+        if str(name).casefold() == "x-goog-api-key":
+            return str(value or "").strip()
+    return ""
+
+
+def _key_slot(api_key: str) -> str:
+    if not api_key:
+        return "unknown"
+    for name in _KEY_NAMES:
+        if os.getenv(name, "").strip() == api_key:
+            return name
+    raw = [value for value in re.split(r"[\s,;]+", os.getenv("GEMINI_API_KEYS", "")) if value]
+    for index, value in enumerate(raw, start=1):
+        if value == api_key:
+            return f"GEMINI_API_KEYS[{index}]"
+    return "unmapped"
+
+
 def guarded_post(*args, **kwargs):
     url = str(args[0] if args else kwargs.get("url", ""))
     if "generativelanguage.googleapis.com" not in url:
         return _original_post(*args, **kwargs)
 
+    # The Interactions endpoint carries the model in the JSON body rather than URL.
+    body = kwargs.get("json") or {}
     match = re.search(r"/models/([^/:]+)", url)
-    model = match.group(1) if match else os.getenv("GEMINI_MODEL", "")
+    model = str(body.get("model") or (match.group(1) if match else "") or os.getenv("GEMINI_MODEL", ""))
     if model not in _ALLOWED_MODELS:
         print(f"Gemini quota guard blocked disallowed model: {model}")
         return _blocked_response(url, model or "unknown", "model is not allowed")
@@ -85,15 +111,18 @@ def guarded_post(*args, **kwargs):
         print(f"Gemini quota guard: DRY_RUN, no real request sent for {model}")
         return _blocked_response(url, model, "dry run does not spend quota")
 
-    count = _real_calls.get(model, 0)
-    if count >= _MAX_REAL_REQUESTS_PER_MODEL_PER_RUN:
-        print(f"Gemini quota guard: local per-run cap reached for {model}; request not sent")
-        return _blocked_response(url, model, "per-run safety cap reached")
+    api_key = _request_api_key(kwargs)
+    slot = _key_slot(api_key)
+    counter_key = (api_key or slot, model)
+    count = _real_calls.get(counter_key, 0)
+    if count >= _MAX_REAL_REQUESTS_PER_KEY_MODEL_PER_RUN:
+        print(f"Gemini quota guard: per-key cap reached for {model} on {slot}; request not sent")
+        return _blocked_response(url, model, f"per-key safety cap reached on {slot}")
 
-    _real_calls[model] = count + 1
+    _real_calls[counter_key] = count + 1
     print(
-        f"Gemini quota guard: real request {count + 1}/{_MAX_REAL_REQUESTS_PER_MODEL_PER_RUN} "
-        f"for {model}"
+        f"Gemini quota guard: real request {count + 1}/{_MAX_REAL_REQUESTS_PER_KEY_MODEL_PER_RUN} "
+        f"for {model} on {slot}"
     )
     return _original_post(*args, **kwargs)
 
@@ -102,6 +131,6 @@ _disable_blocked_keys()
 _rotate_configured_keys()
 requests.post = guarded_post
 print(
-    "Gemini quota guard active: max 1 real request per model per workflow run; "
-    "DRY_RUN uses zero Gemini quota"
+    "Gemini quota guard active: max 1 real request per key per Lite model per workflow run; "
+    "GEMINI_API_KEY_3 disabled; DRY_RUN uses zero Gemini quota"
 )
