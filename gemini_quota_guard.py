@@ -11,13 +11,12 @@ _ALLOWED_MODELS = {
     "gemini-3.1-flash-lite",
 }
 # Safety cap is per Google project/key AND per model, not global per model.
-# With a 10-minute workflow cadence this is at most 144 requests/day to any
-# single key for each Lite model, comfortably below a 500 RPD model limit.
-_MAX_REAL_REQUESTS_PER_KEY_MODEL_PER_RUN = 1
+# With one external workflow dispatch every 10 minutes, a cap of 2 means at most
+# 288 real requests/day to any single live key for each Lite model, below 500 RPD.
+_MAX_REAL_REQUESTS_PER_KEY_MODEL_PER_RUN = 2
 _KEY_NAMES = ["GEMINI_API_KEY", *[f"GEMINI_API_KEY_{i}" for i in range(2, 11)]]
-# Temporarily disabled because Google returns 401 ACCOUNT_STATE_INVALID
-# (bound service account/account is deleted or disabled). Keep the GitHub Secrets
-# untouched so they can be re-enabled after the Google accounts are restored.
+# These two slots were separately identified as blocked Google accounts/projects.
+# Keep their GitHub Secrets untouched so they can be re-enabled after restoration.
 _DISABLED_KEY_NAMES = {"GEMINI_API_KEY_3", "GEMINI_API_KEY_4"}
 _real_calls: dict[tuple[str, str], int] = {}
 _original_post = requests.post
@@ -131,6 +130,6 @@ _disable_blocked_keys()
 _rotate_configured_keys()
 requests.post = guarded_post
 print(
-    "Gemini quota guard active: max 1 real request per key per Lite model per workflow run; "
+    "Gemini quota guard active: max 2 real requests per key per Lite model per workflow run; "
     "GEMINI_API_KEY_3 and GEMINI_API_KEY_4 disabled; DRY_RUN uses zero Gemini quota"
 )
