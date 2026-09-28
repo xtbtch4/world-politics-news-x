@@ -15,9 +15,14 @@ _ALLOWED_MODELS = {
 # 432 real requests/day to any single live key for each Lite model, below 500 RPD.
 _MAX_REAL_REQUESTS_PER_KEY_MODEL_PER_RUN = 3
 _KEY_NAMES = ["GEMINI_API_KEY", *[f"GEMINI_API_KEY_{i}" for i in range(2, 11)]]
-# These two slots were separately identified as blocked Google accounts/projects.
-# Keep their GitHub Secrets untouched so they can be re-enabled after restoration.
-_DISABLED_KEY_NAMES = {"GEMINI_API_KEY_3", "GEMINI_API_KEY_4"}
+# These slots were identified from Actions logs as blocked/disabled Google
+# accounts/projects. Keep the GitHub Secrets untouched so they can be restored
+# later without having to recreate them.
+_DISABLED_KEY_NAMES = {
+    "GEMINI_API_KEY_2",
+    "GEMINI_API_KEY_3",
+    "GEMINI_API_KEY_4",
+}
 _real_calls: dict[tuple[str, str], int] = {}
 _original_post = requests.post
 
@@ -131,5 +136,6 @@ _rotate_configured_keys()
 requests.post = guarded_post
 print(
     "Gemini quota guard active: max 3 real requests per key per Lite model per workflow run; "
-    "GEMINI_API_KEY_3 and GEMINI_API_KEY_4 disabled; DRY_RUN uses zero Gemini quota"
+    f"disabled slots: {', '.join(sorted(_DISABLED_KEY_NAMES))}; "
+    "DRY_RUN uses zero Gemini quota"
 )
